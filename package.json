@@ -26,7 +26,7 @@
     "timeline"
   ],
   "dependencies": {
-    "chrome-devtools-frontend": "1.0.377119-1",
+    "chrome-devtools-frontend": "1.0.377404",
     "node-hook": "^0.2.0"
   },
   "devDependencies": {
