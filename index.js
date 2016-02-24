@@ -1,4 +1,4 @@
-/* global WebInspector Runtime */
+/* global WebInspector Runtime WorkerRuntime Protocol */
 
 // stub out a few APIs
 global.self = global
@@ -7,6 +7,7 @@ global.WebInspector = {}
 global.Runtime = {}
 global.TreeElement = {}
 global.WorkerRuntime = {}
+global.Protocol = {}
 var noop = function () {}
 WorkerRuntime.Worker = noop
 WebInspector.targetManager = {}
@@ -17,31 +18,34 @@ WebInspector.console = {}
 WebInspector.console.error = noop
 WebInspector.moduleSetting = function () { return { get: noop } }
 WebInspector.DeferredLayerTree = {}
-WebInspector.VBox = function () {}
+WebInspector.VBox = noop
+WebInspector.HBox = noop
 WebInspector.SortableDataGridNode = {}
 WebInspector.UIString = (str) => str
+Protocol.Agents = {}
 Runtime.experiments = {}
 Runtime.experiments.isEnabled = (exp) => exp === 'timelineLatencyInfo' // turn this on
 
-
-// We need to barely rewrite just two of these files.
+// Pull in the devtools frontend
+//    We need to barely rewrite just two of these files.
 var hook = require('node-hook')
-// Expose any function declarations as assignments to the global obj
+//    Expose any function declarations as assignments to the global obj
 hook.hook('.js', source => source.replace(/\nfunction\s(\S+)\(/g, '\n$1 = function('))
 require('chrome-devtools-frontend/front_end/common/Object.js')
 require('chrome-devtools-frontend/front_end/platform/utilities.js')
+require('chrome-devtools-frontend/front_end/sdk/Target.js')
 hook.unhook('.js')
-
-// pull in the rest of the devtools frontend totally unmodified
+//    Pull in the rest, unmodified
 require('chrome-devtools-frontend/front_end/bindings/TempFile.js')
 require('chrome-devtools-frontend/front_end/sdk/TracingModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineJSProfile.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineUIUtils.js')
 require('chrome-devtools-frontend/front_end/sdk/CPUProfileDataModel.js')
+require('chrome-devtools-frontend/front_end/timeline/LayerTreeModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineModel.js')
+require('chrome-devtools-frontend/front_end/components_lazy/FilmStripModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineIRModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
-
 
 function traceToTimelineModel (events) {
   // (devtools) tracing model
@@ -63,6 +67,8 @@ function traceToTimelineModel (events) {
   var frameModel = new WebInspector.TracingTimelineFrameModel()
   frameModel.addTraceEvents({ /* target */ }, timelineModel.inspectedTargetEvents(), timelineModel.sessionId() || '')
 
+  var filmStripModel = new WebInspector.FilmStripModel(tracingModel)
+
   // interaction model
   var irModel = new WebInspector.TimelineIRModel()
   irModel.populate(timelineModel)
@@ -70,7 +76,8 @@ function traceToTimelineModel (events) {
   return {
     timelineModel: timelineModel,
     irModel: irModel,
-    frameModel: frameModel
+    frameModel: frameModel,
+    filmStripModel: filmStripModel
   }
 }
 

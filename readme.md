@@ -26,6 +26,7 @@ var model = devtoolsTimelineModel(events)
 model.timelineModel // full event tree
 model.irModel // interactions, input, animations
 model.frameModel // frames, durations
+model.filmStripModel // screenshots
 ```
 
 ![image](https://cloud.githubusercontent.com/assets/39191/13276174/6e8284e8-da71-11e5-89a1-190abbac8dfd.png)
@@ -50,6 +51,7 @@ Either a string of the trace data or the `JSON.parse`'d equivalent.
 * `model.timelineModel` full event tree
 * `model.irModel` interactions, input, animations
 * `model.frameModel` frames, durations
+* `model.filmStripModel` screenshots
 
 These objects are huge. You'll want to explore them in a UI like [devtool](https://github.com/Jam3/devtool).
 
