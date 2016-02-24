@@ -19,9 +19,9 @@ WebInspector.moduleSetting = function () { return { get: noop } }
 WebInspector.DeferredLayerTree = {}
 WebInspector.VBox = function () {}
 WebInspector.SortableDataGridNode = {}
-WebInspector.UIString = str => str
+WebInspector.UIString = (str) => str
 Runtime.experiments = {}
-Runtime.experiments.isEnabled = exp => { exp === 'timelineLatencyInfo' } // turn this on
+Runtime.experiments.isEnabled = (exp) => exp === 'timelineLatencyInfo' // turn this on
 
 
 // We need to barely rewrite just two of these files.

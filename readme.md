@@ -30,7 +30,8 @@ model.frameModel // frames, durations
 
 ![image](https://cloud.githubusercontent.com/assets/39191/13276174/6e8284e8-da71-11e5-89a1-190abbac8dfd.png)
 
-![image](https://cloud.githubusercontent.com/assets/39191/13276306/d3ebcb36-da72-11e5-8204-0812e92f4df1.png)
+Using [devtool](https://github.com/Jam3/devtool) to view the full output:
+![image](https://cloud.githubusercontent.com/assets/39191/13277814/7b6ca6b6-da80-11e5-8841-71305ade04b4.png)
 
 
 ## API
