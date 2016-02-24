@@ -1,0 +1,32 @@
+{
+  "name": "devtools-timeline-model",
+  "version": "1.0.0",
+  "description": "Parse raw trace data into the Chrome DevTools' structured profiling data models",
+  "license": "Apache-2.0",
+  "repository": "paulirish/devtools-timeline-model",
+  "author": {
+    "name": "Paul Irish",
+    "email": "paul.irish@gmail.com",
+    "url": "github.com/paulirish"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "ava --verbose"
+  },
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "keywords": [
+    "devtools", "chrome", "performance", "profiling", "timeline"
+  ],
+  "dependencies": {
+    "chrome-devtools-frontend": "1.0.377119-1",
+    "node-hook": "^0.2.0"
+  },
+  "devDependencies": {
+    "ava": "^0.12.0"
+  }
+}
