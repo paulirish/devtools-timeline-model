@@ -1,4 +1,5 @@
-# devtools-timeline-model [![Build Status](https://travis-ci.org/paulirish/devtools-timeline-model.svg?branch=master)](https://travis-ci.org/paulirish/devtools-timeline-model)
+# devtools-timeline-model [![Build Status](https://travis-ci.org/paulirish/devtools-timeline-model.svg?branch=master)](https://travis-ci.org/paulirish/devtools-timeline-model) 
+
 
 > Parse raw trace data into the Chrome DevTools' structured profiling data models
 
@@ -10,7 +11,7 @@ If you use something like [big-rig](https://github.com/googlechrome/big-rig) or 
 ```sh
 $ npm install --save devtools-timeline-model
 ```
-
+[![NPM devtools-timeline-model package](https://nodei.co/npm/devtools-timeline-model.png?compact=true)](https://npmjs.org/package/devtools-timeline-model)
 
 ## Usage
 
