@@ -12,7 +12,7 @@
     "node": ">=4.0"
   },
   "scripts": {
-    "test": "standard && ava --verbose"
+    "test": "ava --verbose"
   },
   "files": [
     "index.js"
