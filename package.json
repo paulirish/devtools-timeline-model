@@ -30,6 +30,7 @@
     "node-hook": "^0.2.0"
   },
   "devDependencies": {
-    "ava": "^0.12.0"
+    "ava": "^0.12.0",
+    "standard": "^6.0.7"
   }
 }
