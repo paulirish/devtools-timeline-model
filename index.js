@@ -1,37 +1,13 @@
-/* global WebInspector Runtime WorkerRuntime Protocol */
+/* global WebInspector Runtime */
 
-// stub out a few APIs
-global.self = global
-global.window = global
-global.WebInspector = {}
-global.Runtime = {}
-global.TreeElement = {}
-global.WorkerRuntime = {}
-global.Protocol = {}
-var noop = function () {}
-WorkerRuntime.Worker = noop
-WebInspector.targetManager = {}
-WebInspector.targetManager.observeTargets = noop
-WebInspector.settings = {}
-WebInspector.settings.createSetting = noop
-WebInspector.console = {}
-WebInspector.console.error = noop
-WebInspector.moduleSetting = function () { return { get: noop } }
-WebInspector.DeferredLayerTree = {}
-WebInspector.VBox = noop
-WebInspector.HBox = noop
-WebInspector.SortableDataGridNode = {}
-WebInspector.UIString = (str) => str
-Protocol.Agents = {}
-Runtime.experiments = {}
-Runtime.experiments.isEnabled = (exp) => exp === 'timelineLatencyInfo' // turn this on
+require('./lib/api-stubs')
 
 // Pull in the devtools frontend
 require('chrome-devtools-frontend/front_end/common/Object.js')
 
 //    We need to barely rewrite just one of these files.
 //    Expose any function declarations as assignments to the global obj
-//    FIXME: can remove hack once https://codereview.chromium.org/1739473002/ has landed.
+//    FIXME: remove hack once https://codereview.chromium.org/1739473002/ has landed.
 var hook = require('node-hook')
 hook.hook('.js', source => source.replace(/\nfunction\s(\S+)\(/g, '\n$1 = function('))
 require('chrome-devtools-frontend/front_end/platform/utilities.js')
@@ -51,6 +27,8 @@ require('chrome-devtools-frontend/front_end/timeline/TimelineIRModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
 
 function traceToTimelineModel (events) {
+  Runtime.experiments.isEnabled = (exp) => exp === 'timelineLatencyInfo'
+
   // (devtools) tracing model
   var tracingModel = new WebInspector.TracingModel(new WebInspector.TempFileBackingStorage('tracing'))
   // timeline model
