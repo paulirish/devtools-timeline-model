@@ -27,15 +27,18 @@ Runtime.experiments = {}
 Runtime.experiments.isEnabled = (exp) => exp === 'timelineLatencyInfo' // turn this on
 
 // Pull in the devtools frontend
-//    We need to barely rewrite just two of these files.
-var hook = require('node-hook')
-//    Expose any function declarations as assignments to the global obj
-hook.hook('.js', source => source.replace(/\nfunction\s(\S+)\(/g, '\n$1 = function('))
 require('chrome-devtools-frontend/front_end/common/Object.js')
+
+//    We need to barely rewrite just one of these files.
+//    Expose any function declarations as assignments to the global obj
+//    FIXME: can remove hack once https://codereview.chromium.org/1739473002/ has landed.
+var hook = require('node-hook')
+hook.hook('.js', source => source.replace(/\nfunction\s(\S+)\(/g, '\n$1 = function('))
 require('chrome-devtools-frontend/front_end/platform/utilities.js')
-require('chrome-devtools-frontend/front_end/sdk/Target.js')
 hook.unhook('.js')
+
 //    Pull in the rest, unmodified
+require('chrome-devtools-frontend/front_end/sdk/Target.js')
 require('chrome-devtools-frontend/front_end/bindings/TempFile.js')
 require('chrome-devtools-frontend/front_end/sdk/TracingModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineJSProfile.js')
