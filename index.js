@@ -49,12 +49,15 @@ require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
 
 function traceToTimelineModel (events) {
   // (devtools) tracing model
-  var tracingModelBackingStorage = new WebInspector.TempFileBackingStorage('tracing')
-  var tracingModel = new WebInspector.TracingModel(tracingModelBackingStorage)
-
+  var tracingModel = new WebInspector.TracingModel(new WebInspector.TempFileBackingStorage('tracing'))
   // timeline model
-  var timelineModel = new WebInspector.TimelineModel(tracingModel, WebInspector.TimelineUIUtils.visibleEventsFilter())
-  timelineModel.setEventsForTest(typeof events === 'string' ? JSON.parse(events) : events)
+  var timelineModel = new WebInspector.TimelineModel(WebInspector.TimelineUIUtils.visibleEventsFilter())
+
+  // add events to it
+  tracingModel.reset()
+  tracingModel.addEvents(typeof events === 'string' ? JSON.parse(events) : events)
+  tracingModel.tracingComplete()
+  timelineModel.setEvents(tracingModel)
 
   // tree views (bottom up & top down)
   // they are too mixed up with the view. can't do right now.
