@@ -54,13 +54,20 @@ function traceToTimelineModel (events) {
   groupingSetting = WebInspector.TimelineAggregator.GroupBy.URL; // one of: None Category Subdomain Domain URL
   var topDownExport = Object.assign({}, topDown);
   var bottomUpExport = Object.assign({}, bottomUp);
-  var topDownGroupProfile =  aggregator.performGrouping(topDown, groupingSetting);
-  var bottomUpGroupProfile =  aggregator.performGrouping(bottomUp, groupingSetting)
+  var topDownGrouped =  aggregator.performGrouping(topDown, groupingSetting);
+  var bottomUpGrouped =  aggregator.performGrouping(bottomUp, groupingSetting)
 
   // tree view thing
-  var bottomUpTree = new TimelineModelTreeView(bottomUpGroupProfile);
-  bottomUpTree.sortingChanged('self', 'desc');
-  var bottomUpGroupedAndSorted = bottomUpTree._rootNode;
+  // var bottomTreeView = new WebInspector.BottomUpTimelineTreeView(timelineModel)
+
+  var x = new TimelineModelTreeView(bottomUpGrouped);
+  var y = x.sortingChanged('self', false);
+
+  console.log('hsdifih', x, y)
+  // need to call sortNoddes with a contxt wher erootnode is defined
+  // rootNode is WebInspector.SortableDataGridNode.prototype
+
+  // var x = WebInspector.TimelineTreeView.prototype._sortingChanged.call(thisObj);
 
   // frame model
   var frameModel = new WebInspector.TracingTimelineFrameModel()
@@ -81,8 +88,8 @@ function traceToTimelineModel (events) {
     filmStripModel: filmStripModel,
     topDown: topDownExport,
     bottomUp: topDownExport,
-    // topDownGrouped: topDownGrouped,
-    bottomUpGrouped: bottomUpGroupedAndSorted
+    topDownGrouped: topDownGrouped,
+    bottomUpGrouped: bottomUpGrouped
   }
 }
 
