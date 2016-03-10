@@ -17,6 +17,9 @@
   "files": [
     "index.js"
   ],
+  "ava": {
+    "failFast": true
+  },
   "main": "index.js",
   "keywords": [
     "devtools",

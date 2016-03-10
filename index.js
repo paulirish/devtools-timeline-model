@@ -82,7 +82,7 @@ function traceToTimelineModel (events) {
     filmStripModel: filmStripModel,
     topDown: topDownExport,
     bottomUp: bottomUpExport,
-    topDownGroupedUnsorted: topDownGrouped, // Not matching what DevTools UI provides
+    topDownGroupedUnsorted: topDownGrouped, // Not matching what DevTools UI provides, currently
     bottomUpGroupedSorted: bottomUpGrouped
   }
 }
