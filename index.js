@@ -22,35 +22,51 @@ require('chrome-devtools-frontend/front_end/timeline/TimelineUIUtils.js')
 require('chrome-devtools-frontend/front_end/sdk/CPUProfileDataModel.js')
 require('chrome-devtools-frontend/front_end/timeline/LayerTreeModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineModel.js')
+require('chrome-devtools-frontend/front_end/timeline/TimelineTreeView.js')
+require('chrome-devtools-frontend/front_end/ui_lazy/SortableDataGrid.js')
+require('chrome-devtools-frontend/front_end/timeline/TimelineProfileTree.js')
 require('chrome-devtools-frontend/front_end/components_lazy/FilmStripModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineIRModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
 
+require('./lib/devtools-init')
+
 function traceToTimelineModel (events) {
-  Runtime.experiments.isEnabled = (exp) => exp === 'timelineLatencyInfo'
 
   // (devtools) tracing model
   var tracingModel = new WebInspector.TracingModel(new WebInspector.TempFileBackingStorage('tracing'))
   // timeline model
   var timelineModel = new WebInspector.TimelineModel(WebInspector.TimelineUIUtils.visibleEventsFilter())
 
-  // add events to it
+  // populate with events
   tracingModel.reset()
   tracingModel.addEvents(typeof events === 'string' ? JSON.parse(events) : events)
   tracingModel.tracingComplete()
   timelineModel.setEvents(tracingModel)
 
-  // tree views (bottom up & top down)
-  // they are too mixed up with the view. can't do right now.
-  //      require('./timeline/TimelineTreeView.js')
-  //      var treeViewContext = { element: { classList : { add: noop } } }
-  //      var boundBottomUp = WebInspector.BottomUpTimelineTreeView.bind(treeViewContext, timelineModel)
-  //      var bottomUpTree = new boundBottomUp()
+  // topdown / bottomup trees
+  var groupingSetting = WebInspector.TimelineAggregator.GroupBy.None;
+  var aggregator = new WebInspector.TimelineAggregator(event => WebInspector.TimelineUIUtils.eventStyle(event).category.name);
+  var topDown = WebInspector.TimelineProfileTree.buildTopDown(timelineModel.mainThreadEvents(), /*filters*/ [], /*startTime*/ 0, /*endTime*/ Infinity, /*eventIdCallback*/ undefined);
+  var bottomUp = WebInspector.TimelineProfileTree.buildBottomUp(topDown, aggregator.groupFunction(groupingSetting));
+
+  // grouped trees
+  groupingSetting = WebInspector.TimelineAggregator.GroupBy.URL; // one of: None Category Subdomain Domain URL
+  var topDownExport = Object.assign({}, topDown);
+  var bottomUpExport = Object.assign({}, bottomUp);
+  var topDownGroupProfile =  aggregator.performGrouping(topDown, groupingSetting);
+  var bottomUpGroupProfile =  aggregator.performGrouping(bottomUp, groupingSetting)
+
+  // tree view thing
+  var bottomUpTree = new TimelineModelTreeView(bottomUpGroupProfile);
+  bottomUpTree.sortingChanged('self', 'desc');
+  var bottomUpGroupedAndSorted = bottomUpTree._rootNode;
 
   // frame model
   var frameModel = new WebInspector.TracingTimelineFrameModel()
   frameModel.addTraceEvents({ /* target */ }, timelineModel.inspectedTargetEvents(), timelineModel.sessionId() || '')
 
+  // filmstrip model
   var filmStripModel = new WebInspector.FilmStripModel(tracingModel)
 
   // interaction model
@@ -58,10 +74,15 @@ function traceToTimelineModel (events) {
   irModel.populate(timelineModel)
 
   return {
+    tracingModel: tracingModel,
     timelineModel: timelineModel,
     irModel: irModel,
     frameModel: frameModel,
-    filmStripModel: filmStripModel
+    filmStripModel: filmStripModel,
+    topDown: topDownExport,
+    bottomUp: topDownExport,
+    // topDownGrouped: topDownGrouped,
+    bottomUpGrouped: bottomUpGroupedAndSorted
   }
 }
 
