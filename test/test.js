@@ -19,11 +19,10 @@ test('metrics returned are expected', (t) => {
   t.is(model.frameModel.frames().length, 125)
 })
 
-// test('bottom-up profile ', t => {
-//   var topCosts = [...model.bottomUpGroupedSorted.children.values()];
-//   var secondTopCost = topCosts[1];
-//   t.is(true,true)
-//   t.is(secondTopCost.totalTime.toFixed(2), '183.22');
-//   t.is(secondTopCost.id, "https://developer.cdn.mozilla.net/static/build/js/main.4df460b33f9e.js")
-// })
+test('bottom-up profile ', t => {
+  var topCosts = [...model.bottomUpGroupedSorted.children.values()];
+  var secondTopCost = topCosts[1];
+  t.is(secondTopCost.totalTime.toFixed(2), '183.22');
+  t.is(secondTopCost.id, "https://developer.cdn.mozilla.net/static/build/js/main.4df460b33f9e.js")
+})
 
