@@ -29,7 +29,9 @@ require('chrome-devtools-frontend/front_end/components_lazy/FilmStripModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineIRModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
 
+
 require('./lib/devtools-init')
+require('./lib/timeline-model-treeview')
 
 function traceToTimelineModel (events) {
 
@@ -48,26 +50,18 @@ function traceToTimelineModel (events) {
   var groupingSetting = WebInspector.TimelineAggregator.GroupBy.None;
   var aggregator = new WebInspector.TimelineAggregator(event => WebInspector.TimelineUIUtils.eventStyle(event).category.name);
   var topDown = WebInspector.TimelineProfileTree.buildTopDown(timelineModel.mainThreadEvents(), /*filters*/ [], /*startTime*/ 0, /*endTime*/ Infinity, /*eventIdCallback*/ undefined);
-  var bottomUp = WebInspector.TimelineProfileTree.buildBottomUp(topDown, aggregator.groupFunction(groupingSetting));
-
-  // grouped trees
-  groupingSetting = WebInspector.TimelineAggregator.GroupBy.URL; // one of: None Category Subdomain Domain URL
   var topDownExport = Object.assign({}, topDown);
+
+  // bottomup & grouped trees
+  var bottomUp = WebInspector.TimelineProfileTree.buildBottomUp(topDown, aggregator.groupFunction(groupingSetting));
+  groupingSetting = WebInspector.TimelineAggregator.GroupBy.URL; // one of: None Category Subdomain Domain URL
   var bottomUpExport = Object.assign({}, bottomUp);
   var topDownGrouped =  aggregator.performGrouping(topDown, groupingSetting);
   var bottomUpGrouped =  aggregator.performGrouping(bottomUp, groupingSetting)
 
-  // tree view thing
-  // var bottomTreeView = new WebInspector.BottomUpTimelineTreeView(timelineModel)
-
-  var x = new TimelineModelTreeView(bottomUpGrouped);
-  var y = x.sortingChanged('self', false);
-
-  console.log('hsdifih', x, y)
-  // need to call sortNoddes with a contxt wher erootnode is defined
-  // rootNode is WebInspector.SortableDataGridNode.prototype
-
-  // var x = WebInspector.TimelineTreeView.prototype._sortingChanged.call(thisObj);
+  // tree views
+  // new TimelineModelTreeView(topDownGrouped).sortingChanged('total', 'asc');
+  new TimelineModelTreeView(bottomUpGrouped).sortingChanged('self', 'desc');
 
   // frame model
   var frameModel = new WebInspector.TracingTimelineFrameModel()
@@ -87,9 +81,9 @@ function traceToTimelineModel (events) {
     frameModel: frameModel,
     filmStripModel: filmStripModel,
     topDown: topDownExport,
-    bottomUp: topDownExport,
-    topDownGrouped: topDownGrouped,
-    bottomUpGrouped: bottomUpGrouped
+    bottomUp: bottomUpExport,
+    topDownGroupedUnsorted: topDownGrouped, // Not matching what DevTools UI provides
+    bottomUpGroupedSorted: bottomUpGrouped
   }
 }
 

@@ -25,10 +25,11 @@ function report (filename) {
 
 
   console.log('Top down tree total time:\n', model.topDown.totalTime)
-  console.log('Bottom up tree:\n', model.bottomUp)
-  // console.log('Top down tree, grouped by URL:\n', model.topDownGrouped)
-  var topCost = model.bottomUpGrouped.children.entries().next().value[1]
-  console.log('Bottom up tree, grouped, top URL:\n', topCost.id, topCost.totalTime)
+  console.log('Bottom up tree leaves:\n', [...model.bottomUp.children.entries()].length)
+  // console.log('Top down tree, grouped by URL:\n', model.topDownGroupedUnsorted)
+  var topCosts = [...model.bottomUpGroupedSorted.children.values()];
+  var secondTopCost = topCosts[1];
+  console.log('Bottom up tree, grouped, 2nd top URL:\n', secondTopCost.totalTime.toFixed(2), secondTopCost.id)
 
   // console.log('Tracing model:\n', model.tracingModel)
   // console.log('Timeline model:\n', model.timelineModel)
@@ -38,8 +39,8 @@ function report (filename) {
 
   // console.log('Top down tree:\n', model.topDown)
   // console.log('Bottom up tree:\n', model.bottomUp)
-  // //console.log('Top down tree, grouped by URL:\n', model.topDownGrouped)
-  // console.log('Bottom up tree grouped by URL:\n', model.bottomUpGrouped)
+  // // console.log('Top down tree, grouped by URL:\n', model.topDownGroupedUnsorted)
+  // console.log('Bottom up tree grouped by URL:\n', model.bottomUpGroupedSorted)
 
 
   console.groupEnd(filename);
