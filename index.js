@@ -47,7 +47,7 @@ function traceToTimelineModel (events) {
   // topdown / bottomup trees
   var groupingSetting = WebInspector.TimelineAggregator.GroupBy.None
   var aggregator = new WebInspector.TimelineAggregator((event) => WebInspector.TimelineUIUtils.eventStyle(event).category.name)
-  var topDown = WebInspector.TimelineProfileTree.buildTopDown(timelineModel.mainThreadEvents(), /* filters */ [], /* startTime */ 0, /* endTime */ Infinity, /* eventIdCallback */ undefined)
+  var topDown = WebInspector.TimelineProfileTree.buildTopDown(timelineModel.mainThreadEvents(), /* filters */ [], /* startTime */ 0, /* endTime */ Infinity, /* eventIdCallback */ WebInspector.TimelineAggregator.eventId)
   var topDownExport = Object.assign({}, topDown)
 
   // bottomup & grouped trees
