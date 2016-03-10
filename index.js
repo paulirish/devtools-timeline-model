@@ -1,4 +1,4 @@
-/* global WebInspector Runtime */
+/* global WebInspector TimelineModelTreeView */
 
 require('./lib/api-stubs')
 
@@ -9,7 +9,7 @@ require('chrome-devtools-frontend/front_end/common/Object.js')
 //    Expose any function declarations as assignments to the global obj
 //    FIXME: remove hack once https://codereview.chromium.org/1739473002/ has landed.
 var hook = require('node-hook')
-hook.hook('.js', source => source.replace(/\nfunction\s(\S+)\(/g, '\n$1 = function('))
+hook.hook('.js', (source) => source.replace(/\nfunction\s(\S+)\(/g, '\n$1 = function('))
 require('chrome-devtools-frontend/front_end/platform/utilities.js')
 hook.unhook('.js')
 
@@ -29,12 +29,10 @@ require('chrome-devtools-frontend/front_end/components_lazy/FilmStripModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineIRModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
 
-
 require('./lib/devtools-init')
 require('./lib/timeline-model-treeview')
 
 function traceToTimelineModel (events) {
-
   // (devtools) tracing model
   var tracingModel = new WebInspector.TracingModel(new WebInspector.TempFileBackingStorage('tracing'))
   // timeline model
@@ -47,21 +45,21 @@ function traceToTimelineModel (events) {
   timelineModel.setEvents(tracingModel)
 
   // topdown / bottomup trees
-  var groupingSetting = WebInspector.TimelineAggregator.GroupBy.None;
-  var aggregator = new WebInspector.TimelineAggregator(event => WebInspector.TimelineUIUtils.eventStyle(event).category.name);
-  var topDown = WebInspector.TimelineProfileTree.buildTopDown(timelineModel.mainThreadEvents(), /*filters*/ [], /*startTime*/ 0, /*endTime*/ Infinity, /*eventIdCallback*/ undefined);
-  var topDownExport = Object.assign({}, topDown);
+  var groupingSetting = WebInspector.TimelineAggregator.GroupBy.None
+  var aggregator = new WebInspector.TimelineAggregator((event) => WebInspector.TimelineUIUtils.eventStyle(event).category.name)
+  var topDown = WebInspector.TimelineProfileTree.buildTopDown(timelineModel.mainThreadEvents(), /* filters */ [], /* startTime */ 0, /* endTime */ Infinity, /* eventIdCallback */ undefined)
+  var topDownExport = Object.assign({}, topDown)
 
   // bottomup & grouped trees
-  var bottomUp = WebInspector.TimelineProfileTree.buildBottomUp(topDown, aggregator.groupFunction(groupingSetting));
-  groupingSetting = WebInspector.TimelineAggregator.GroupBy.URL; // one of: None Category Subdomain Domain URL
-  var bottomUpExport = Object.assign({}, bottomUp);
-  var topDownGrouped =  aggregator.performGrouping(topDown, groupingSetting);
-  var bottomUpGrouped =  aggregator.performGrouping(bottomUp, groupingSetting)
+  var bottomUp = WebInspector.TimelineProfileTree.buildBottomUp(topDown, aggregator.groupFunction(groupingSetting))
+  groupingSetting = WebInspector.TimelineAggregator.GroupBy.URL // one of: None Category Subdomain Domain URL
+  var bottomUpExport = Object.assign({}, bottomUp)
+  var topDownGrouped = aggregator.performGrouping(topDown, groupingSetting)
+  var bottomUpGrouped = aggregator.performGrouping(bottomUp, groupingSetting)
 
   // tree views
-  // new TimelineModelTreeView(topDownGrouped).sortingChanged('total', 'asc');
-  new TimelineModelTreeView(bottomUpGrouped).sortingChanged('self', 'desc');
+  // new TimelineModelTreeView(topDownGrouped).sortingChanged('total', 'asc')
+  new TimelineModelTreeView(bottomUpGrouped).sortingChanged('self', 'desc')
 
   // frame model
   var frameModel = new WebInspector.TracingTimelineFrameModel()

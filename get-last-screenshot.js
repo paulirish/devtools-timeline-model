@@ -13,8 +13,8 @@ var frames = model.filmStripModel.frames()
 var length = frames.length
 if (length >= 1) {
   frames[length - 1].imageDataPromise()
-    .then(data => Promise.resolve('data:image/jpg;base64,' + data))
-    .then(img => {
+    .then((data) => Promise.resolve('data:image/jpg;base64,' + data))
+    .then((img) => {
       console.log(img)
     })
 }
