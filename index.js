@@ -44,18 +44,34 @@ function traceToTimelineModel (events) {
   tracingModel.tracingComplete()
   timelineModel.setEvents(tracingModel)
 
+  var filters = [];
+  filters.push(WebInspector.TimelineUIUtils.visibleEventsFilter());
+  filters.push(new WebInspector.ExcludeTopLevelFilter());
+  var nonessentialEvents = [
+        WebInspector.TimelineModel.RecordType.EventDispatch,
+        WebInspector.TimelineModel.RecordType.FunctionCall,
+        WebInspector.TimelineModel.RecordType.TimerFire
+  ];
+  filters.push(new WebInspector.ExclusiveNameFilter(nonessentialEvents));
+
   // topdown / bottomup trees
-  var groupingSetting = WebInspector.TimelineAggregator.GroupBy.None
+  var noGrouping = WebInspector.TimelineAggregator.GroupBy.None
   var aggregator = new WebInspector.TimelineAggregator((event) => WebInspector.TimelineUIUtils.eventStyle(event).category.name)
-  var topDown = WebInspector.TimelineProfileTree.buildTopDown(timelineModel.mainThreadEvents(), /* filters */ [], /* startTime */ 0, /* endTime */ Infinity, /* eventIdCallback */ WebInspector.TimelineAggregator.eventId)
+  var topDown = WebInspector.TimelineProfileTree.buildTopDown(timelineModel.mainThreadEvents(), filters, /* startTime */ 0, /* endTime */ Infinity, WebInspector.TimelineAggregator.eventId)
   var topDownExport = Object.assign({}, topDown)
 
-  // bottomup & grouped trees
-  var bottomUp = WebInspector.TimelineProfileTree.buildBottomUp(topDown, aggregator.groupFunction(groupingSetting))
-  groupingSetting = WebInspector.TimelineAggregator.GroupBy.URL // one of: None Category Subdomain Domain URL
+  // bottomup
+  var noGroupAggregator =  aggregator.groupFunction(noGrouping)
+  var bottomUp = WebInspector.TimelineProfileTree.buildBottomUp(topDown, noGroupAggregator)
   var bottomUpExport = Object.assign({}, bottomUp)
-  var topDownGrouped = aggregator.performGrouping(topDown, groupingSetting)
-  var bottomUpGrouped = aggregator.performGrouping(bottomUp, groupingSetting)
+
+  // group bottomup
+  var groupByUrl = WebInspector.TimelineAggregator.GroupBy.URL // one of: None Category Subdomain Domain URL
+  var groupURLAggregator =  aggregator.groupFunction(groupByUrl)
+  var bottomUpGrouped = WebInspector.TimelineProfileTree.buildBottomUp(topDown, groupURLAggregator)
+
+  //var topDownGrouped = aggregator.performGrouping(topDown, groupingSetting)
+  // var bottomUpGrouped = aggregator.performGrouping(bottomUp, groupingSetting)
 
   // tree views
   // new TimelineModelTreeView(topDownGrouped).sortingChanged('total', 'asc')
@@ -80,7 +96,7 @@ function traceToTimelineModel (events) {
     filmStripModel: filmStripModel,
     topDown: topDownExport,
     bottomUp: bottomUpExport,
-    topDownGroupedUnsorted: topDownGrouped, // Not matching what DevTools UI provides, currently
+    // topDownGroupedUnsorted: topDownGrouped, // Not matching what DevTools UI provides, currently
     bottomUpGroupedSorted: bottomUpGrouped
   }
 }
