@@ -3,26 +3,28 @@ import test from 'ava'
 var fs = require('fs')
 var traceToTimelineModel = require('../')
 
-const filename = 'mdn-fling.json'
+const filename = 'devtools-homepage-w-screenshots-trace.json'
 var events = fs.readFileSync(filename, 'utf8')
 var model
 
 test("doesn't throw an exception", (t) => {
   t.notThrows((_) => {
-    model = traceToTimelineModel(events)
+    model = new traceToTimelineModel(events)
   })
 })
 
 test('metrics returned are expected', (t) => {
-  t.is(model.timelineModel.mainThreadEvents().length, 4812)
-  t.is(model.irModel.interactionRecords().length, 9)
-  t.is(model.frameModel.frames().length, 125)
+  t.is(model.timelineModel().mainThreadEvents().length, 7228)
+  t.is(model.interactionModel().interactionRecords().length, 0)
+  t.is(model.frameModel().frames().length, 16)
 })
 
 test('bottom-up profile', (t) => {
-  var topCosts = [...model.bottomUpGroupedSorted.children.values()]
+  var leaves = [...model.bottomUp().children.entries()].length
+  t.is(leaves, 243)
+  var topCosts = [...model.bottomUpGroupBy('URL').children.values()]
   var time = topCosts[1].totalTime.toFixed(2)
   var url = topCosts[1].id
-  t.is(time, '238.85')
-  t.is(url, 'https://developer.cdn.mozilla.net/static/build/js/main.4df460b33f9e.js')
+  t.is(time, '80.77')
+  t.is(url, 'https://s.ytimg.com/yts/jsbin/www-embed-lightweight-vflu_2b1k/www-embed-lightweight.js')
 })
