@@ -14,19 +14,19 @@ if (!console.group) {
 function report (filename) {
   var events = fs.readFileSync(filename, 'utf8')
 
-  var model = traceToTimelineModel(events)
+  var model = new traceToTimelineModel(events)
 
   console.group(filename)
 
-  console.log('Timeline model events:\n', model.timelineModel.mainThreadEvents().length)
-  console.log('IR model interactions\n', model.irModel.interactionRecords().length)
-  console.log('Frame model frames:\n', model.frameModel.frames().length)
-  console.log('Filmstrip model screenshots:\n', model.filmStripModel.frames().length)
+  console.log('Timeline model events:\n', model.timelineModel().mainThreadEvents().length)
+  console.log('IR model interactions\n', model.interactionModel().interactionRecords().length)
+  console.log('Frame model frames:\n', model.frameModel().frames().length)
+  console.log('Filmstrip model screenshots:\n', model.filmStripModel().frames().length)
 
-  console.log('Top down tree total time:\n', model.topDown.totalTime)
-  console.log('Bottom up tree leaves:\n', [...model.bottomUp.children.entries()].length)
+  console.log('Top down tree total time:\n', model.topDown().totalTime)
+  console.log('Bottom up tree leaves:\n', [...model.bottomUp().children.entries()].length)
   // console.log('Top down tree, grouped by URL:\n', model.topDownGroupedUnsorted)
-  var topCosts = [...model.bottomUpGroupedSorted.children.values()]
+  var topCosts = [...model.bottomUpGroupBy('URL').children.values()]
   var secondTopCost = topCosts[1]
   console.log('Bottom up tree, grouped, 2nd top URL:\n', secondTopCost.totalTime.toFixed(2), secondTopCost.id)
 
