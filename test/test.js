@@ -19,6 +19,14 @@ test('metrics returned are expected', (t) => {
   t.is(model.frameModel().frames().length, 16)
 })
 
+test('top-down profile', (t) => {
+  var leaves = [...model.topDown().children.entries()].length;
+  t.is(leaves, 28)
+  var time = model.topDown().totalTime.toFixed(2)
+  t.is(time, '559.21')
+})
+
+
 test('bottom-up profile', (t) => {
   var leaves = [...model.bottomUp().children.entries()].length
   t.is(leaves, 243)
