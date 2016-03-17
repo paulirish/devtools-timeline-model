@@ -1,20 +1,20 @@
 /* global WebInspector TimelineModelTreeView */
-"use strict";
+'use strict';
 
 require('./lib/api-stubs')
 
 // Pull in the devtools frontend
 require('chrome-devtools-frontend/front_end/common/Object.js')
+require('chrome-devtools-frontend/front_end/common/SegmentedRange.js')
 
 //    We need to barely rewrite just one of these files.
 //    Expose any function declarations as assignments to the global obj
-//    FIXME: remove hack once https://codereview.chromium.org/1739473002/ has landed.
+//    FIXME: remove hack once insertionIndexForObjectInListSortedByFunction is sorted.
 var hook = require('node-hook')
 hook.hook('.js', (source) => source.replace(/\nfunction\s(\S+)\(/g, '\n$1 = function('))
 require('chrome-devtools-frontend/front_end/platform/utilities.js')
 hook.unhook('.js')
 
-//    Pull in the rest, unmodified
 require('chrome-devtools-frontend/front_end/sdk/Target.js')
 require('chrome-devtools-frontend/front_end/bindings/TempFile.js')
 require('chrome-devtools-frontend/front_end/sdk/TracingModel.js')
@@ -30,6 +30,7 @@ require('chrome-devtools-frontend/front_end/components_lazy/FilmStripModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineIRModel.js')
 require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
 
+// local libs
 require('./lib/devtools-init')
 require('./lib/timeline-model-treeview')
 
