@@ -33,7 +33,7 @@ require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
 require('./lib/devtools-init')
 require('./lib/timeline-model-treeview')
 
-class traceToTimelineModel {
+class TraceToTimelineModel {
 
   constructor (events) {
       // (devtools) tracing model
@@ -112,4 +112,4 @@ class traceToTimelineModel {
 
 }
 
-module.exports = traceToTimelineModel
+module.exports = TraceToTimelineModel
