@@ -1,7 +1,7 @@
 import test from 'ava'
 
 var fs = require('fs')
-var traceToTimelineModel = require('../')
+var TraceToTimelineModel = require('../')
 
 const filename = 'devtools-homepage-w-screenshots-trace.json'
 var events = fs.readFileSync(filename, 'utf8')
@@ -9,7 +9,7 @@ var model
 
 test("doesn't throw an exception", (t) => {
   t.notThrows((_) => {
-    model = new traceToTimelineModel(events)
+    model = new TraceToTimelineModel(events)
   })
 })
 

@@ -19,9 +19,9 @@ $ npm install --save devtools-timeline-model
 var filename = 'demo/mdn-fling.json'
 var events = require('fs').readFileSync(filename, 'utf8')
 
-var devtoolsTimelineModel = require('devtools-timeline-model');
+var DevtoolsTimelineModel = require('devtools-timeline-model');
 // events can be either a string of the trace data or the JSON.parse'd equivalent
-var model = new devtoolsTimelineModel(events)
+var model = new DevtoolsTimelineModel(events)
 
 
 // timeline model, all events

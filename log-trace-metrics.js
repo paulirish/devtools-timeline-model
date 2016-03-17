@@ -4,7 +4,7 @@ const filenames = [
 ]
 
 var fs = require('fs')
-var traceToTimelineModel = require('.')
+var TraceToTimelineModel = require('.')
 
 if (!console.group) {
   console.group = (n) => console.log(n, ':')
@@ -14,7 +14,7 @@ if (!console.group) {
 function report (filename) {
   var events = fs.readFileSync(filename, 'utf8')
 
-  var model = new traceToTimelineModel(events)
+  var model = new TraceToTimelineModel(events)
 
   console.group(filename)
 
@@ -30,16 +30,16 @@ function report (filename) {
   var secondTopCost = topCosts[1]
   console.log('Bottom up tree, grouped, 2nd top URL:\n', secondTopCost.totalTime.toFixed(2), secondTopCost.id)
 
-  // console.log('Tracing model:\n', model.tracingModel)
-  // console.log('Timeline model:\n', model.timelineModel)
-  // console.log('IR model:\n', model.irModel)
-  // console.log('Frame model:\n', model.frameModel)
-  // console.log('Filmstrip model:\n', model.filmStripModel)
+  // console.log('Tracing model:\n', model.tracingModel())
+  // console.log('Timeline model:\n', model.timelineModel())
+  // console.log('IR model:\n', model.interactionModel())
+  // console.log('Frame model:\n', model.frameModel())
+  // console.log('Filmstrip model:\n', model.filmStripModel())
 
-  // console.log('Top down tree:\n', model.topDown)
-  // console.log('Bottom up tree:\n', model.bottomUp)
+  // console.log('Top down tree:\n', model.topDown())
+  // console.log('Bottom up tree:\n', model.bottomUp())
   // // console.log('Top down tree, grouped by URL:\n', model.topDownGroupedUnsorted)
-  // console.log('Bottom up tree grouped by URL:\n', model.bottomUpGroupedSorted)
+  // console.log('Bottom up tree grouped by URL:\n', model.bottomUpGroupBy('URL'))
 
   console.groupEnd(filename)
 }
