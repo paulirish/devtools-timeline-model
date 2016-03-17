@@ -38,7 +38,8 @@ model.topDown()
 // bottom up tree
 model.bottomUp()
 // bottom up tree, grouped by URL
-model.bottomUpGroupBy('URL')
+model.bottomUpGroupBy('URL') // accepts: None Category Subdomain Domain URL
+
 ```
 
 ![image](https://cloud.githubusercontent.com/assets/39191/13832447/7b4dffde-eb99-11e5-8f7e-f1afcf999fd6.png)
