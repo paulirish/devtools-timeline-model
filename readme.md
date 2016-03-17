@@ -41,10 +41,11 @@ model.bottomUp()
 model.bottomUpGroupBy('URL')
 ```
 
-![image](https://cloud.githubusercontent.com/assets/39191/13276174/6e8284e8-da71-11e5-89a1-190abbac8dfd.png)
+![image](https://cloud.githubusercontent.com/assets/39191/13832447/7b4dffde-eb99-11e5-8f7e-f1afcf999fd6.png)
 
 These objects are huge. You'll want to explore them in a UI like [devtool](https://github.com/Jam3/devtool).
-![image](https://cloud.githubusercontent.com/assets/39191/13277814/7b6ca6b6-da80-11e5-8841-71305ade04b4.png)
+![image](https://cloud.githubusercontent.com/assets/39191/13832411/390270ec-eb99-11e5-8dc9-c647c1b62c9d.png)
+
 
 
 
