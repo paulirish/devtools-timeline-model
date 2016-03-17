@@ -11,7 +11,7 @@ If you use something like [big-rig](https://github.com/googlechrome/big-rig) or 
 ```sh
 $ npm install --save devtools-timeline-model
 ```
-[![NPM devtools-timeline-model package](https://nodei.co/npm/devtools-timeline-model.png?compact=true)](https://npmjs.org/package/devtools-timeline-model)
+[![NPM devtools-timeline-model package](https://img.shields.io/npm/v/devtools-timeline-model.svg)](https://npmjs.org/package/devtools-timeline-model)
 
 ## Usage
 
