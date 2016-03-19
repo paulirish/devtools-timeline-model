@@ -14,9 +14,6 @@
   "scripts": {
     "test": "ava --verbose"
   },
-  "files": [
-    "index.js"
-  ],
   "ava": {
     "failFast": true
   },
