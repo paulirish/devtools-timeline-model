@@ -23,7 +23,8 @@ var DevtoolsTimelineModel = require('devtools-timeline-model');
 // events can be either a string of the trace data or the JSON.parse'd equivalent
 var model = new DevtoolsTimelineModel(events)
 
-
+// tracing model
+model.tracingModel()
 // timeline model, all events
 model.timelineModel()
 // interaction model, incl scroll, click, animations
