@@ -4,12 +4,8 @@
 // DevTools relies on a global WebInspector variable. :(
 // This callWithGlobals BS is a nasty hack to keep this global exclusive to our model
 var callWithGlobals = require('call-with-globals');
-var sb = require('./lib/sandboxed-natives');
 var _WebInspector = {}
-
-var _WI_global = { WebInspector: _WebInspector, Array: sb.Array}; //, Uint32Array: _Uint32Array}
-
-// var _WI_global = { WebInspector: _WebInspector }
+var _WI_global = { WebInspector: _WebInspector }
 
 class TraceToTimelineModel {
 
