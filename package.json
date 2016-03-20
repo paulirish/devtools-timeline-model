@@ -26,6 +26,7 @@
     "timeline"
   ],
   "dependencies": {
+    "call-with-globals": "0.1.0",
     "chrome-devtools-frontend": "1.0.382117"
   },
   "devDependencies": {
