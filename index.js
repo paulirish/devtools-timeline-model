@@ -1,34 +1,16 @@
 /* global WebInspector TimelineModelTreeView */
 'use strict';
 
-require('./lib/api-stubs')
+var sm = require('sandboxed-module');
 
-// Pull in the devtools frontend
-require('chrome-devtools-frontend/front_end/common/Object.js')
-require('chrome-devtools-frontend/front_end/common/SegmentedRange.js')
-require('chrome-devtools-frontend/front_end/platform/utilities.js')
-require('chrome-devtools-frontend/front_end/sdk/Target.js')
-require('chrome-devtools-frontend/front_end/bindings/TempFile.js')
-require('chrome-devtools-frontend/front_end/sdk/TracingModel.js')
-require('chrome-devtools-frontend/front_end/timeline/TimelineJSProfile.js')
-require('chrome-devtools-frontend/front_end/timeline/TimelineUIUtils.js')
-require('chrome-devtools-frontend/front_end/sdk/CPUProfileDataModel.js')
-require('chrome-devtools-frontend/front_end/timeline/LayerTreeModel.js')
-require('chrome-devtools-frontend/front_end/timeline/TimelineModel.js')
-require('chrome-devtools-frontend/front_end/timeline/TimelineTreeView.js')
-require('chrome-devtools-frontend/front_end/ui_lazy/SortableDataGrid.js')
-require('chrome-devtools-frontend/front_end/timeline/TimelineProfileTree.js')
-require('chrome-devtools-frontend/front_end/components_lazy/FilmStripModel.js')
-require('chrome-devtools-frontend/front_end/timeline/TimelineIRModel.js')
-require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
-
-// local libs
-require('./lib/devtools-init')
-require('./lib/timeline-model-treeview')
-
+var WebInspector = {}
 class TraceToTimelineModel {
 
   constructor(events) {
+
+    // pull devtools frontend and stubs.
+    var WebInspector = sm.require('./lib/api-stubs', { globals: { WebInspector: WebInspector }})
+    console.log('hello',process.pid);
     // (devtools) tracing model
     this._tracingModel = new WebInspector.TracingModel(new WebInspector.TempFileBackingStorage('tracing'))
     // timeline model
