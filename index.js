@@ -1,13 +1,13 @@
 /* global WebInspector TimelineModelTreeView */
 'use strict';
 
+var sm = require('sandboxed-module');
+
+
 // DevTools relies on a global WebInspector variable. :(
 // This callWithGlobals BS is a nasty hack to keep this global exclusive to our model
-var callWithGlobals = require('call-with-globals');
-var sb = require('./lib/sandboxed-natives');
-var _WebInspector = {}
+var WebInspector = {}
 
-var _WI_global = { WebInspector: _WebInspector, Array: sb.Array}; //, Uint32Array: _Uint32Array}
 
 // var _WI_global = { WebInspector: _WebInspector }
 
@@ -16,32 +16,12 @@ class TraceToTimelineModel {
   constructor(events) {
 
     var instance = this;
-    callWithGlobals(_ => {
+
 
       // Other globals and stubs
-      require('./lib/api-stubs')
+      var WebInspector = sm.require('./lib/api-stubs', { globals: { WebInspector: WebInspector }})
       // Pull in the devtools frontend
-      require('chrome-devtools-frontend/front_end/common/Object.js')
-      require('chrome-devtools-frontend/front_end/common/SegmentedRange.js')
-      require('chrome-devtools-frontend/front_end/platform/utilities.js')
-      require('chrome-devtools-frontend/front_end/sdk/Target.js')
-      require('chrome-devtools-frontend/front_end/bindings/TempFile.js')
-      require('chrome-devtools-frontend/front_end/sdk/TracingModel.js')
-      require('chrome-devtools-frontend/front_end/timeline/TimelineJSProfile.js')
-      require('chrome-devtools-frontend/front_end/timeline/TimelineUIUtils.js')
-      require('chrome-devtools-frontend/front_end/sdk/CPUProfileDataModel.js')
-      require('chrome-devtools-frontend/front_end/timeline/LayerTreeModel.js')
-      require('chrome-devtools-frontend/front_end/timeline/TimelineModel.js')
-      require('chrome-devtools-frontend/front_end/timeline/TimelineTreeView.js')
-      require('chrome-devtools-frontend/front_end/ui_lazy/SortableDataGrid.js')
-      require('chrome-devtools-frontend/front_end/timeline/TimelineProfileTree.js')
-      require('chrome-devtools-frontend/front_end/components_lazy/FilmStripModel.js')
-      require('chrome-devtools-frontend/front_end/timeline/TimelineIRModel.js')
-      require('chrome-devtools-frontend/front_end/timeline/TimelineFrameModel.js')
-      // minor configurations
-      require('./lib/devtools-init')
-      // polyfill the bottom-up and topdown tree sorting
-      require('./lib/timeline-model-treeview')
+
 
       // (devtools) tracing model
       instance._tracingModel = new WebInspector.TracingModel(new WebInspector.TempFileBackingStorage('tracing'))
@@ -56,7 +36,7 @@ class TraceToTimelineModel {
 
       instance._aggregator = new WebInspector.TimelineAggregator((event) => WebInspector.TimelineUIUtils.eventStyle(event).category.name)
 
-    }, _WI_global);
+
 
     return this;
   }
