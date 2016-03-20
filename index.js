@@ -4,10 +4,55 @@
 // DevTools relies on a global WebInspector variable. :(
 // This callWithGlobals BS is a nasty hack to keep this global exclusive to our model
 var callWithGlobals = require('call-with-globals');
-var sb = require('./lib/sandboxed-natives');
+// var sb = require('./lib/sandboxed-natives');
+var fuse = require('./lib/fuse');
+
 var _WebInspector = {}
 
-var _WI_global = { WebInspector: _WebInspector, Array: sb.Array}; //, Uint32Array: _Uint32Array}
+var _Uint32Array = function (length) {
+  var result = [], argLen = arguments.length
+  if (argLen) {
+    // ensure _Uint32Array acts like window.Array
+    if (argLen === 1 && typeof length === 'number') {
+      result.length = length
+    } else {
+      result.push.apply(result, arguments)
+    }
+  }
+  // rewire the array’s __proto__ making it use
+  // _Uint32Array.prototype instead of window.Array.prototype
+  // when looking up methods/properties
+  result.__proto__ = _Uint32Array.prototype
+  return result
+}
+// set constructor's prototype as global native instances
+_Uint32Array.prototype = Uint32Array
+
+
+var _Float64Array = function (length) {
+  var result = [], argLen = arguments.length
+  if (argLen) {
+    // ensure _Float64Array acts like window.Array
+    if (argLen === 1 && typeof length === 'number') {
+      result.length = length
+    } else {
+      result.push.apply(result, arguments)
+    }
+  }
+  // rewire the array’s __proto__ making it use
+  // _Float64Array.prototype instead of window.Array.prototype
+  // when looking up methods/properties
+  result.__proto__ = _Float64Array.prototype
+  return result
+}
+// set constructor's prototype as global native instances
+_Float64Array.prototype = Float64Array
+
+
+fuse.fuse.Object.setPrototypeOf = Object.setPrototypeOf;
+fuse.fuse.Object.defineProperty = Object.defineProperty;
+
+var _WI_global = { WebInspector: _WebInspector, Array: fuse.fuse.Array,  Uint32Array: _Uint32Array, Object: fuse.fuse.Object, Float64Array: _Float64Array }; //,}
 
 // var _WI_global = { WebInspector: _WebInspector }
 
