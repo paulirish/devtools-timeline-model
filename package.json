@@ -27,8 +27,7 @@
   ],
   "dependencies": {
     "call-with-globals": "0.1.0",
-    "chrome-devtools-frontend": "1.0.382117",
-    "sandboxed-module": "^2.0.3"
+    "chrome-devtools-frontend": "1.0.382117"
   },
   "devDependencies": {
     "ava": "^0.12.0",
