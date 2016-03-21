@@ -11,6 +11,18 @@ if (!console.group) {
   console.groupEnd = (n) => console.log('')
 }
 
+function dumpScreenshot(filmStripModel){
+  var frames = filmStripModel.frames()
+  var framesLen = frames.length
+  if (framesLen >= 1) {
+    frames[framesLen - 1].imageDataPromise()
+      .then((data) => Promise.resolve('data:image/jpg;base64,' + data))
+      .then((img) => {
+        console.log('Filmstrip model last screenshot:\n', img.substr(0,30) + '...');
+      })
+  }
+}
+
 function report (filename) {
   var events = fs.readFileSync(filename, 'utf8')
 
@@ -22,6 +34,7 @@ function report (filename) {
   console.log('IR model interactions\n', model.interactionModel().interactionRecords().length)
   console.log('Frame model frames:\n', model.frameModel().frames().length)
   console.log('Filmstrip model screenshots:\n', model.filmStripModel().frames().length)
+  dumpScreenshot(model.filmStripModel());
 
   console.log('Top down tree total time:\n', model.topDown().totalTime)
   console.log('Bottom up tree leaves:\n', [...model.bottomUp().children.entries()].length)
