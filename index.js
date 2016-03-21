@@ -9,45 +9,23 @@ class TraceToTimelineModel {
   constructor(events) {
 
     // pull devtools frontend and stubs.
-    var WebInspector = sm.require('./lib/api-stubs', { globals: { WebInspector: WebInspector }})
-    console.log('hello',process.pid);
-    // (devtools) tracing model
-    this._tracingModel = new WebInspector.TracingModel(new WebInspector.TempFileBackingStorage('tracing'))
-    // timeline model
-    this._timelineModel = new WebInspector.TimelineModel(WebInspector.TimelineUIUtils.visibleEventsFilter())
-
-    // populate with events
-    this._tracingModel.reset()
-    this._tracingModel.addEvents(typeof events === 'string' ? JSON.parse(events) : events)
-    this._tracingModel.tracingComplete()
-    this._timelineModel.setEvents(this._tracingModel)
-
-    this._aggregator = new WebInspector.TimelineAggregator((event) => WebInspector.TimelineUIUtils.eventStyle(event).category.name)
+    this.sandbox = sm.load('./lib/api-stubs', { globals: { WebInspector: WebInspector }})
+    debugger;
+    this.sandbox.exports.init(events);
 
     return this;
   }
 
   timelineModel() {
-    return this._timelineModel;
+    return this.sandbox.timelineModel();
   }
 
   tracingModel() {
-    return this._tracingModel;
+    return this.sandbox.tracingModel();
   }
 
   topDown() {
-    var filters = [];
-    filters.push(WebInspector.TimelineUIUtils.visibleEventsFilter());
-    filters.push(new WebInspector.ExcludeTopLevelFilter());
-    var nonessentialEvents = [
-      WebInspector.TimelineModel.RecordType.EventDispatch,
-      WebInspector.TimelineModel.RecordType.FunctionCall,
-      WebInspector.TimelineModel.RecordType.TimerFire
-    ];
-    filters.push(new WebInspector.ExclusiveNameFilter(nonessentialEvents));
-
-    return WebInspector.TimelineProfileTree.buildTopDown(this._timelineModel.mainThreadEvents(),
-                  filters, /* startTime */ 0, /* endTime */ Infinity, WebInspector.TimelineAggregator.eventId)
+    return this.sandbox.topDown();
   }
 
   bottomUp() {

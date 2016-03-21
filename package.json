@@ -26,7 +26,8 @@
     "timeline"
   ],
   "dependencies": {
-    "chrome-devtools-frontend": "1.0.382117"
+    "chrome-devtools-frontend": "1.0.382117",
+    "fast-or-slow": "0.0.5"
   },
   "devDependencies": {
     "ava": "^0.12.0",
