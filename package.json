@@ -26,10 +26,7 @@
     "timeline"
   ],
   "dependencies": {
-    "chrome-devtools-frontend": "1.0.382117",
-    "fast-or-slow": "0.0.5",
-    "mock-globals": "^0.1.3",
-    "sandbox": "^0.8.6"
+    "chrome-devtools-frontend": "1.0.382117"
   },
   "devDependencies": {
     "ava": "^0.12.0",
