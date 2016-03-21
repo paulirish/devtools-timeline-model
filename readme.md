@@ -49,6 +49,13 @@ These objects are huge. You'll want to explore them in a UI like [devtool](https
 ![image](https://cloud.githubusercontent.com/assets/39191/13832411/390270ec-eb99-11e5-8dc9-c647c1b62c9d.png)
 
 
+## Dev
+
+```sh
+npm i
+brew install entr
+gls index.js lib/*.js | entr node example.js
+```
 
 
 

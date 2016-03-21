@@ -18,7 +18,7 @@ function dumpScreenshot(filmStripModel){
     frames[framesLen - 1].imageDataPromise()
       .then((data) => Promise.resolve('data:image/jpg;base64,' + data))
       .then((img) => {
-        console.log('Filmstrip model last screenshot:\n', img.substr(0,30) + '...');
+        console.log('Filmstrip model last screenshot:\n', img.substr(0,50) + '...');
       })
   }
 }
