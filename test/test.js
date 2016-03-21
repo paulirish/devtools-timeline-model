@@ -13,6 +13,25 @@ test("doesn't throw an exception", (t) => {
   })
 })
 
+test("Array native globals dont leak", (t) => {
+  t.is(Array.prototype.peekLast, undefined)
+})
+
+test("WebInspector global doesn't leak", (t) => {
+  t.is(typeof WebInspector, 'undefined')
+})
+
+test("Multiple instances don't conflict", (t) => {
+  var model1, model2;
+  t.notThrows((_) => {
+    model1 = new TraceToTimelineModel(events)
+    model2 = new TraceToTimelineModel(events)
+  })
+  var events1 = model1.timelineModel().mainThreadEvents().length;
+  var events2 = model2.timelineModel().mainThreadEvents().length;
+  t.is(events1, events2)
+})
+
 test('metrics returned are expected', (t) => {
   t.is(model.timelineModel().mainThreadEvents().length, 7228)
   t.is(model.interactionModel().interactionRecords().length, 0)
