@@ -1,17 +1,25 @@
 /* global WebInspector TimelineModelTreeView */
 'use strict';
 
-var sm = require('sandboxed-module');
+//require('mock-globals') // nope. doesn't sandbox Natives
+// var Sandbox = require('sandbox'); // nope. doesn't have a global obj
+// vm.createContext // nope. doesnt have global.
+var fs = require('fs');
+var vm = require('vm')
+
 
 var WebInspector = {}
 class TraceToTimelineModel {
 
   constructor(events) {
 
-    // pull devtools frontend and stubs.
-    this.sandbox = sm.load('./lib/api-stubs', { globals: { WebInspector: WebInspector }})
-    debugger;
-    this.sandbox.exports.init(events);
+    var glob = { require: require, global: global, console: console, process, process, __dirname: __dirname }
+    const script  = new vm.Script(fs.readFileSync(__dirname + "/lib/api-stubs.js", 'utf8'))
+    var ctx = vm.createContext(glob);
+    var output = script.runInContext(ctx)
+
+    this.sandbox = ctx.instance;
+    this.sandbox.init(events);
 
     return this;
   }
@@ -29,40 +37,26 @@ class TraceToTimelineModel {
   }
 
   bottomUp() {
-    var topDown = this.topDown();
-    var noGrouping = WebInspector.TimelineAggregator.GroupBy.None
-    var noGroupAggregator =  this._aggregator.groupFunction(noGrouping)
-    return WebInspector.TimelineProfileTree.buildBottomUp(topDown, noGroupAggregator)
+    return this.sandbox.bottomUp();
   }
 
   // @ returns a grouped and sorted tree
   bottomUpGroupBy(grouping) {
-    var topDown = this.topDown();
-    var groupSetting = WebInspector.TimelineAggregator.GroupBy[grouping] // one of: None Category Subdomain Domain URL
-    var groupURLAggregator =  this._aggregator.groupFunction(groupSetting)
-    var bottomUpGrouped = WebInspector.TimelineProfileTree.buildBottomUp(topDown, groupURLAggregator)
-    // sort the grouped tree, in-place
-    new TimelineModelTreeView(bottomUpGrouped).sortingChanged('self', 'desc')
-    return bottomUpGrouped
+    return this.sandbox.bottomUpGroupBy(grouping);
   }
 
   frameModel() {
-    var frameModel = new WebInspector.TracingTimelineFrameModel()
-    frameModel.addTraceEvents({ /* target */ }, this._timelineModel.inspectedTargetEvents(), this._timelineModel.sessionId() || '')
-    return frameModel
+    return this.sandbox.frameModel();
   }
 
   filmStripModel() {
-    return new WebInspector.FilmStripModel(this._tracingModel)
+    return this.sandbox.filmStripModel();
   }
 
 
   interactionModel() {
-    var irModel = new WebInspector.TimelineIRModel()
-    irModel.populate(this._timelineModel)
-    return irModel
+     return this.sandbox.interactionModel();
   }
-
 }
 
 module.exports = TraceToTimelineModel
