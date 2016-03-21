@@ -17,6 +17,10 @@ test("Array native globals dont leak", (t) => {
   t.is(Array.prototype.peekLast, undefined)
 })
 
+test("WebInspector global doesn't leak", (t) => {
+  t.is(typeof WebInspector, 'undefined')
+})
+
 test("Multiple instances don't conflict", (t) => {
   var model1, model2;
   t.notThrows((_) => {
