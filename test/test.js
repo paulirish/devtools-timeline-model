@@ -55,3 +55,17 @@ test('bottom-up profile', (t) => {
   t.is(time, '80.77')
   t.is(url, 'https://s.ytimg.com/yts/jsbin/www-embed-lightweight-vflu_2b1k/www-embed-lightweight.js')
 })
+
+test('bottom-up profile - group by name', (t) => {
+  var bottomUpByName = model.bottomUpGroupBy('EventName');
+  var leavesCount =  bottomUpByName.children.size;
+  t.is(leavesCount, 15)
+  var result = new Map()
+  bottomUpByName.children.forEach(function(value, key) {
+    result.set(key, value.selfTime);
+  })
+  var time = [...result.values()][0].toFixed(2)
+  var name = [...result.keys()][0]
+  t.is(time, '187.75')
+  t.is(name, 'Layout')
+})
