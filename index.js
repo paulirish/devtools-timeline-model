@@ -36,7 +36,10 @@ class ModelAPI {
     return this.sandbox.bottomUp();
   }
 
-  // @ returns a grouped and sorted tree
+  /**
+   * @ param  {!String} grouping Allowed values: None Category Subdomain Domain URL Name
+   * @ return {!WebInspector.TimelineProfileTree.Node} A grouped and sorted tree
+   */
   bottomUpGroupBy(grouping) {
     return this.sandbox.bottomUpGroupBy(grouping);
   }

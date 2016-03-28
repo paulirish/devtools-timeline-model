@@ -52,7 +52,15 @@ function report (filename) {
   // console.log('Top down tree:\n', model.topDown())
   // console.log('Bottom up tree:\n', model.bottomUp())
   // // console.log('Top down tree, grouped by URL:\n', model.topDownGroupedUnsorted)
-  // console.log('Bottom up tree grouped by URL:\n', model.bottomUpGroupBy('URL'))
+  // console.log('Bottom up tree grouped by URL:\n', model.bottomUpGroupBy('None'))
+
+  var bottomUpByName = model.bottomUpGroupBy('EventName')
+  var result = new Map()
+  bottomUpByName.children.forEach(function(value, key) {
+    result.set(key, value.selfTime);
+  })
+  console.log('Bottom up tree grouped by Name:\n', result)
+
 
   console.groupEnd(filename)
 }
