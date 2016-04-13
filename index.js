@@ -10,7 +10,7 @@ class ModelAPI {
 
     // Everything happens in a sandboxed vm context, to keep globals and natives separate.
     // First, sandboxed contexts don't have any globals from node, so we whitelist a few we'll provide for it.
-    var glob = { require: require, global: global, console: console, process, process, __dirname: __dirname }
+    var glob = { require: require, global: global, console: console, process: process, __dirname: __dirname }
     // We read in our script to run, and create a vm.Script object 
     var script  = new vm.Script(fs.readFileSync(__dirname + "/lib/timeline-model.js", 'utf8'))
     // We create a new V8 context with our globals
