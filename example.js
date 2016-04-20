@@ -1,6 +1,6 @@
 const filenames = [
-  'test/mdn-fling.json',
-  'test/devtools-homepage-w-screenshots-trace.json'
+  'test/assets/mdn-fling.json',
+  'test/assets/devtools-homepage-w-screenshots-trace.json'
 ]
 
 var fs = require('fs')

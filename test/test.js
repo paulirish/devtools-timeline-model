@@ -3,7 +3,7 @@ import test from 'ava'
 var fs = require('fs')
 var TraceToTimelineModel = require('../')
 
-const filename = 'devtools-homepage-w-screenshots-trace.json'
+const filename = 'assets/devtools-homepage-w-screenshots-trace.json'
 var events = fs.readFileSync(filename, 'utf8')
 var model
 
