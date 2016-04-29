@@ -10,7 +10,7 @@ const tracefilename = './test/assets/devtools-homepage-w-screenshots-trace.json'
 const tracejsonfilename = './test/assets/progressive-app.json';
 const ssfilename = './test/assets/grayscale.jpg';
 
-function calculateVisualProgressFromImages(images = [], delay = 1000) {
+function calculateVisualProgressFromImages(images, delay) {
   const baseTs = new Date().getTime();
 
   const frames = images.map((imgPath, i) => {
