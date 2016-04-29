@@ -14,9 +14,6 @@
   "scripts": {
     "test": "mocha $(find ./test -name '*.js') --timeout 10000"
   },
-  "ava": {
-    "failFast": true
-  },
   "main": "index.js",
   "keywords": [
     "devtools",
@@ -31,7 +28,6 @@
   },
   "devDependencies": {
     "mocha": "^2.3.3",
-    "speedline": "0.1.2",
-    "standard": "^6.0.7"
+    "speedline": "0.1.2"
   }
 }
