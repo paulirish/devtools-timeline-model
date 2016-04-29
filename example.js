@@ -7,8 +7,8 @@ var fs = require('fs');
 var TraceToTimelineModel = require('.');
 
 if (!console.group) {
-  console.group = (n) => console.log(n, ':');
-  console.groupEnd = (n) => console.log('');
+  console.group = n => console.log(n, ':');
+  console.groupEnd = _ => console.log('');
 }
 
 function dumpScreenshot(filmStripModel) {
@@ -16,8 +16,8 @@ function dumpScreenshot(filmStripModel) {
   var framesLen = frames.length;
   if (framesLen >= 1) {
     frames[framesLen - 1].imageDataPromise()
-      .then((data) => Promise.resolve('data:image/jpg;base64,' + data))
-      .then((img) => {
+      .then(data => Promise.resolve('data:image/jpg;base64,' + data))
+      .then(img => {
         console.log('Filmstrip model last screenshot:\n', img.substr(0, 50) + '...');
       });
   }
@@ -60,7 +60,6 @@ function report(filename) {
     result.set(key, value.selfTime);
   });
   console.log('Bottom up tree grouped by EventName:\n', result);
-
 
   console.groupEnd(filename);
 }

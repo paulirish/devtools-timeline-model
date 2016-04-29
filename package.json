@@ -12,7 +12,11 @@
     "node": ">=5.0"
   },
   "scripts": {
-    "test": "mocha $(find ./test -name '*.js') --timeout 10000"
+    "test": "npm run unit && npm run lint",
+    "unit": "mocha $(find ./test -name '*.js') --timeout 10000",
+    "lint": "eslint .",
+    "watch": "find . -name \"*.js\"  | grep -v \"node_modules\" | grep -v \"test\" | entr npm run test",
+    "watchlint": "find . -name \"*.js\"  | grep -v \"node_modules\" | grep -v \"test\" | entr npm run lint"
   },
   "main": "index.js",
   "keywords": [
