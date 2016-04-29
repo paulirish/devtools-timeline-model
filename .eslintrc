@@ -1,0 +1,34 @@
+{
+  "extends": "google",
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "no-multiple-empty-lines": 2,
+    "padded-blocks": 2,
+    "curly": [0, "multi-line"],
+    "max-len": [2, 120, {
+      "ignoreComments": true,
+      "ignoreUrls": true,
+      "tabWidth": 2
+    }],
+    "no-implicit-coercion": [2, {
+      "boolean": false,
+      "number": true,
+      "string": true
+    }],
+    "no-unused-expressions": [2, {
+      "allowShortCircuit": true,
+      "allowTernary": false
+    }],
+    "no-unused-vars": [1, {
+      "vars": "all",
+      "args": "after-used",
+      "argsIgnorePattern": "(^reject$|^_$)",
+      "varsIgnorePattern": "(^_$)"
+    }],
+    "quotes": [2, "single"],
+    "require-jsdoc": 0,
+    "valid-jsdoc": 0
+  }
+}

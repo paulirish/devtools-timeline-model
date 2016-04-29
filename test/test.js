@@ -1,15 +1,16 @@
-"use strict"
+'use strict';
 
-var fs = require('fs')
+var fs = require('fs');
 const assert = require('assert');
 
-var TimelineModel = require('../')
+var TimelineModel = require('../');
 
-const filename = './test/assets/devtools-homepage-w-screenshots-trace.json'
-var events = fs.readFileSync(filename, 'utf8')
-var model
+const filename = './test/assets/devtools-homepage-w-screenshots-trace.json';
+var events = fs.readFileSync(filename, 'utf8');
+var model;
 
-describe('Web Inspector obj', function () {
+/* global describe, it */
+describe('Web Inspector obj', function() {
   // tested over in lighthouse but this isn't available in the sandbox
   it.skip('WebInspector exported is the real one', () => {
     const WebInspector = TimelineModel.sandbox.WI;
