@@ -59,7 +59,7 @@ function report (filename) {
   bottomUpByName.children.forEach(function(value, key) {
     result.set(key, value.selfTime);
   })
-  console.log('Bottom up tree grouped by Name:\n', result)
+  console.log('Bottom up tree grouped by EventName:\n', result)
 
 
   console.groupEnd(filename)

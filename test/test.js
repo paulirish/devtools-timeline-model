@@ -39,15 +39,15 @@ test('metrics returned are expected', (t) => {
 })
 
 test('top-down profile', (t) => {
-  var leaves = [...model.topDown().children.entries()].length;
-  t.is(leaves, 28)
+  const leavesCount = model.topDown().children.size;
+  t.is(leavesCount, 28)
   var time = model.topDown().totalTime.toFixed(2)
   t.is(time, '559.21')
 })
 
 
 test('bottom-up profile', (t) => {
-  var leaves = [...model.bottomUp().children.entries()].length
+  const leavesCount = model.bottomUp().children.size;
   t.is(leaves, 243)
   var topCosts = [...model.bottomUpGroupBy('URL').children.values()]
   var time = topCosts[1].totalTime.toFixed(2)
@@ -56,16 +56,13 @@ test('bottom-up profile', (t) => {
   t.is(url, 'https://s.ytimg.com/yts/jsbin/www-embed-lightweight-vflu_2b1k/www-embed-lightweight.js')
 })
 
-test('bottom-up profile - group by name', (t) => {
-  var bottomUpByName = model.bottomUpGroupBy('EventName');
-  var leavesCount =  bottomUpByName.children.size;
+test('bottom-up profile - group by eventname', (t) => {
+  const bottomUpByName = model.bottomUpGroupBy('EventName');
+  const leavesCount = bottomUpByName.children.size;
   t.is(leavesCount, 15)
-  var result = new Map()
-  bottomUpByName.children.forEach(function(value, key) {
-    result.set(key, value.selfTime);
-  })
-  var time = [...result.values()][0].toFixed(2)
-  var name = [...result.keys()][0]
+  const topCosts = [...bottomUpByName.children.values()];
+  const time = topCosts[0].selfTime.toFixed(2);
+  const name = topCosts[0].id;
   t.is(time, '187.75')
   t.is(name, 'Layout')
 })
