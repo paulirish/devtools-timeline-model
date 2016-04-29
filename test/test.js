@@ -7,6 +7,34 @@ const filename = './test/assets/devtools-homepage-w-screenshots-trace.json'
 var events = fs.readFileSync(filename, 'utf8')
 var model
 
+describe('Web Inspector obj', function () {
+  // tested over in lighthouse but this isn't available in the sandbox
+  it.skip('WebInspector exported is the real one', () => {
+    const WebInspector = TimelineModel.sandbox.WI;
+    assert.equal(typeof WebInspector, 'object');
+    assert.ok(WebInspector.TimelineModel);
+    assert.ok(WebInspector.TimelineUIUtils);
+    assert.ok(WebInspector.FilmStripModel);
+    assert.ok(WebInspector.TimelineProfileTree);
+    assert.ok(WebInspector.TimelineAggregator);
+    assert.ok(WebInspector.NetworkManager);
+    assert.ok(WebInspector.Color);
+  });
+
+  it('Array native globals dont leak', () => {
+    assert.equal(Array.prototype.peekLast, undefined);
+  });
+
+  it('WebInspector global doesn\'t leak', () => {
+    assert.equal('WebInspector' in global, false);
+    assert.equal('Runtime' in global, false);
+    assert.equal('TreeElement' in global, false);
+    assert.equal('WorkerRuntime' in global, false);
+    assert.equal('Protocol' in global, false);
+  });
+});
+
+
 describe('DevTools Timeline Model', function() {
   it('doesn\'t throw an exception', () => {
     assert.doesNotThrow(_ => {
