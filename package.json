@@ -12,7 +12,7 @@
     "node": ">=5.0"
   },
   "scripts": {
-    "test": "ava --verbose"
+    "test": "mocha $(find ./test -name '*.js') --timeout 10000"
   },
   "ava": {
     "failFast": true
@@ -30,7 +30,7 @@
     "resolve": "1.1.7"
   },
   "devDependencies": {
-    "ava": "^0.12.0",
+    "mocha": "^2.3.3",
     "speedline": "0.0.4",
     "standard": "^6.0.7"
   }
