@@ -4,8 +4,8 @@ var fs = require('fs');
 var vm = require('vm');
 
 /* eslint-disable no-native-reassign */
-if (typeof process === undefined) {
-  process = {};
+if (typeof __dirname === 'undefined') {
+  process = process || {};
   __dirname = {};
 }
 /* eslint-enable no-native-reassign */
