@@ -1,0 +1,37 @@
+{
+  "extends": "google",
+  "env": {
+    "node": true
+  },
+  "rules": {
+    // "off" or 0 - turn the rule off
+    // "warn" or 1 - turn the rule on as a warning (doesn’t affect exit code)
+    // "error" or 2 - turn the rule on as an error (exit code is 1 when triggered)
+    "no-multiple-empty-lines": 0,
+    "padded-blocks": 0,
+    "curly": [0, "multi-line"],
+    "max-len": [1, 120, {
+      "ignoreComments": true,
+      "ignoreUrls": true,
+      "tabWidth": 2
+    }],
+    "no-implicit-coercion": [2, {
+      "boolean": false,
+      "number": true,
+      "string": true
+    }],
+    "no-unused-expressions": [2, {
+      "allowShortCircuit": true,
+      "allowTernary": false
+    }],
+    "no-unused-vars": [1, {
+      "vars": "all",
+      "args": "after-used",
+      "argsIgnorePattern": "(^reject$|^_$)",
+      "varsIgnorePattern": "(^_$|andboxedModel$)"
+    }],
+    "quotes": [2, "single"],
+    "require-jsdoc": 0,
+    "valid-jsdoc": 0
+  }
+}

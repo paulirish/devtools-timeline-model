@@ -1,71 +1,93 @@
-import test from 'ava'
+'use strict';
 
-var fs = require('fs')
-var TraceToTimelineModel = require('../')
+var fs = require('fs');
+const assert = require('assert');
 
-const filename = 'devtools-homepage-w-screenshots-trace.json'
-var events = fs.readFileSync(filename, 'utf8')
-var model
+var TimelineModel = require('../');
 
-test("doesn't throw an exception", (t) => {
-  t.notThrows((_) => {
-    model = new TraceToTimelineModel(events)
-  })
-})
+const filename = './test/assets/devtools-homepage-w-screenshots-trace.json';
+var events = fs.readFileSync(filename, 'utf8');
+var model;
 
-test("Array native globals dont leak", (t) => {
-  t.is(Array.prototype.peekLast, undefined)
-})
+/* global describe, it */
+describe('Web Inspector obj', function() {
+  // tested over in lighthouse but this isn't available in the sandbox
+  it.skip('WebInspector exported is the real one', () => {
+    const WebInspector = TimelineModel.sandbox.WI;
+    assert.equal(typeof WebInspector, 'object');
+    assert.ok(WebInspector.TimelineModel);
+    assert.ok(WebInspector.TimelineUIUtils);
+    assert.ok(WebInspector.FilmStripModel);
+    assert.ok(WebInspector.TimelineProfileTree);
+    assert.ok(WebInspector.TimelineAggregator);
+    assert.ok(WebInspector.NetworkManager);
+    assert.ok(WebInspector.Color);
+  });
 
-test("WebInspector global doesn't leak", (t) => {
-  t.is(typeof WebInspector, 'undefined')
-})
+  it('Array native globals dont leak', () => {
+    assert.equal(Array.prototype.peekLast, undefined);
+  });
 
-test("Multiple instances don't conflict", (t) => {
-  var model1, model2;
-  t.notThrows((_) => {
-    model1 = new TraceToTimelineModel(events)
-    model2 = new TraceToTimelineModel(events)
-  })
-  var events1 = model1.timelineModel().mainThreadEvents().length;
-  var events2 = model2.timelineModel().mainThreadEvents().length;
-  t.is(events1, events2)
-})
-
-test('metrics returned are expected', (t) => {
-  t.is(model.timelineModel().mainThreadEvents().length, 7228)
-  t.is(model.interactionModel().interactionRecords().length, 0)
-  t.is(model.frameModel().frames().length, 16)
-})
-
-test('top-down profile', (t) => {
-  var leaves = [...model.topDown().children.entries()].length;
-  t.is(leaves, 28)
-  var time = model.topDown().totalTime.toFixed(2)
-  t.is(time, '559.21')
-})
+  it('WebInspector global doesn\'t leak', () => {
+    assert.equal('WebInspector' in global, false);
+    assert.equal('Runtime' in global, false);
+    assert.equal('TreeElement' in global, false);
+    assert.equal('WorkerRuntime' in global, false);
+    assert.equal('Protocol' in global, false);
+  });
+});
 
 
-test('bottom-up profile', (t) => {
-  var leaves = [...model.bottomUp().children.entries()].length
-  t.is(leaves, 243)
-  var topCosts = [...model.bottomUpGroupBy('URL').children.values()]
-  var time = topCosts[1].totalTime.toFixed(2)
-  var url = topCosts[1].id
-  t.is(time, '80.77')
-  t.is(url, 'https://s.ytimg.com/yts/jsbin/www-embed-lightweight-vflu_2b1k/www-embed-lightweight.js')
-})
+describe('DevTools Timeline Model', function() {
+  it('doesn\'t throw an exception', () => {
+    assert.doesNotThrow(_ => {
+      model = new TimelineModel(events);
+    });
+  });
 
-test('bottom-up profile - group by name', (t) => {
-  var bottomUpByName = model.bottomUpGroupBy('EventName');
-  var leavesCount =  bottomUpByName.children.size;
-  t.is(leavesCount, 15)
-  var result = new Map()
-  bottomUpByName.children.forEach(function(value, key) {
-    result.set(key, value.selfTime);
-  })
-  var time = [...result.values()][0].toFixed(2)
-  var name = [...result.keys()][0]
-  t.is(time, '187.75')
-  t.is(name, 'Layout')
-})
+  it('Multiple instances don\'t conflict', () => {
+    let model1;
+    let model2;
+    assert.doesNotThrow(_ => {
+      model1 = new TimelineModel(events);
+      model2 = new TimelineModel(events);
+    });
+    const events1 = model1.timelineModel().mainThreadEvents().length;
+    const events2 = model2.timelineModel().mainThreadEvents().length;
+    assert.equal(events1, events2);
+  });
+
+  it('metrics returned are expected', () => {
+    assert.equal(model.timelineModel().mainThreadEvents().length, 7228);
+    assert.equal(model.interactionModel().interactionRecords().length, 0);
+    assert.equal(model.frameModel().frames().length, 16);
+  });
+
+  it('top-down profile', () => {
+    const leavesCount = model.topDown().children.size;
+    assert.equal(leavesCount, 28);
+    const time = model.topDown().totalTime.toFixed(2);
+    assert.equal(time, '559.21');
+  });
+
+  it('bottom-up profile', () => {
+    const leavesCount = model.bottomUp().children.size;
+    assert.equal(leavesCount, 243);
+    const topCosts = [...model.bottomUpGroupBy('URL').children.values()];
+    const time = topCosts[1].totalTime.toFixed(2);
+    const url = topCosts[1].id;
+    assert.equal(time, '80.77');
+    assert.equal(url, 'https://s.ytimg.com/yts/jsbin/www-embed-lightweight-vflu_2b1k/www-embed-lightweight.js');
+  });
+
+  it('bottom-up profile - group by eventname', () => {
+    const bottomUpByName = model.bottomUpGroupBy('EventName');
+    const leavesCount = bottomUpByName.children.size;
+    assert.equal(leavesCount, 15);
+    const topCosts = [...bottomUpByName.children.values()];
+    const time = topCosts[0].selfTime.toFixed(2);
+    const name = topCosts[0].id;
+    assert.equal(time, '187.75');
+    assert.equal(name, 'Layout');
+  });
+});

@@ -1,6 +1,6 @@
 {
   "name": "devtools-timeline-model",
-  "version": "1.0.18",
+  "version": "1.1.4",
   "description": "Parse raw trace data into the Chrome DevTools' structured profiling data models",
   "license": "Apache-2.0",
   "repository": "paulirish/devtools-timeline-model",
@@ -12,10 +12,11 @@
     "node": ">=5.0"
   },
   "scripts": {
-    "test": "ava --verbose"
-  },
-  "ava": {
-    "failFast": true
+    "test": "npm run unit && npm run lint",
+    "unit": "mocha $(find ./test -name '*.js') --timeout 10000",
+    "lint": "eslint .",
+    "watch": "find . -name \"*.js\"  | grep -v \"node_modules\" | grep -v \"test\" | entr npm run test",
+    "watchlint": "find . -name \"*.js\"  | grep -v \"node_modules\" | grep -v \"test\" | entr npm run lint"
   },
   "main": "index.js",
   "keywords": [
@@ -30,7 +31,9 @@
     "resolve": "1.1.7"
   },
   "devDependencies": {
-    "ava": "^0.12.0",
-    "standard": "^6.0.7"
+    "eslint": "^2.4.0",
+    "eslint-config-google": "^0.4.0",
+    "mocha": "^2.3.3",
+    "speedline": "0.1.2"
   }
 }
