@@ -84,7 +84,7 @@ describe('DevTools Timeline Model', function() {
   it('bottom-up profile - group by eventname', () => {
     const bottomUpByName = model.bottomUpGroupBy('EventName');
     const leavesCount = bottomUpByName.children.size;
-    assert.equal(leavesCount, 14);
+    assert.equal(leavesCount, 13);
     const topCosts = [...bottomUpByName.children.values()];
     const time = topCosts[0].selfTime.toFixed(2);
     const name = topCosts[0].id;
