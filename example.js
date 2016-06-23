@@ -43,6 +43,11 @@ function report(filename) {
   var secondTopCost = topCosts[1];
   console.log('Bottom up tree, grouped, 2nd top URL:\n', secondTopCost.totalTime.toFixed(2), secondTopCost.id);
 
+  var topCostsByDomain = [...model.bottomUpGroupBy('Subdomain').children.values()];
+  var thirdTopDomainCost = topCostsByDomain[2];
+  console.log('Bottom up tree, grouped, 3rd top subdomain:\n', thirdTopDomainCost.totalTime.toFixed(2), thirdTopDomainCost.id);
+
+
   // console.log('Tracing model:\n', model.tracingModel())
   // console.log('Timeline model:\n', model.timelineModel())
   // console.log('IR model:\n', model.interactionModel())
