@@ -5,8 +5,9 @@ const assert = require('assert');
 
 var TimelineModel = require('../');
 
-const filename = './test/assets/devtools-homepage-w-screenshots-trace.json';
-var events = fs.readFileSync(filename, 'utf8');
+const traceInArrayFormatFilename = './test/assets/devtools-homepage-w-screenshots-trace.json';
+const traceInObjectFormatFilename = './test/assets/trace-in-object-format.json';
+var events = fs.readFileSync(traceInArrayFormatFilename, 'utf8');
 var model;
 
 /* global describe, it */
@@ -89,5 +90,23 @@ describe('DevTools Timeline Model', function() {
     const name = topCosts[0].id;
     assert.equal(time, '187.75');
     assert.equal(name, 'Layout');
+  });
+});
+
+// https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview#heading=h.q8di1j2nawlp
+describe('Supports Trace Events in JSON Object format', function() {
+  const events = fs.readFileSync(traceInObjectFormatFilename, 'utf8');
+  let model;
+
+  it('does not throw an exception', () => {
+    assert.doesNotThrow(_ => {
+      model = new TimelineModel(events);
+    });
+  });
+
+  it('creates correctly formatted model', () => {
+    assert.equal(model.timelineModel().mainThreadEvents().length, 8254);
+    assert.equal(model.interactionModel().interactionRecords().length, 0);
+    assert.equal(model.frameModel().frames().length, 12);
   });
 });
