@@ -91,6 +91,15 @@ describe('DevTools Timeline Model', function() {
     assert.equal(time, '187.75');
     assert.equal(name, 'Layout');
   });
+
+  it('bottom-up profile - group by subdomain', () => {
+    const bottomUpByName = model.bottomUpGroupBy('Subdomain');
+    const topCosts = [...bottomUpByName.children.values()];
+    const time = topCosts[2].selfTime.toFixed(2);
+    const name = topCosts[2].id;
+    assert.equal(time, '44.33');
+    assert.equal(name, 'developers.google.com');
+  });
 });
 
 // https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview#heading=h.q8di1j2nawlp
