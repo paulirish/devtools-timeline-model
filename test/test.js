@@ -40,7 +40,7 @@ describe('Web Inspector obj', function() {
 
 
 describe('DevTools Timeline Model', function() {
-  it('doesn\'t throw an exception', () => {
+  it.only('doesn\'t throw an exception', () => {
     assert.doesNotThrow(_ => {
       model = new TimelineModel(events);
     });
@@ -59,13 +59,14 @@ describe('DevTools Timeline Model', function() {
   });
 
   it('metrics returned are expected', () => {
-    assert.equal(model.timelineModel().mainThreadEvents().length, 7756);
+    assert.equal(model.timelineModel().mainThreadEvents().length, 7721);
     assert.equal(model.interactionModel().interactionRecords().length, 0);
     assert.equal(model.frameModel().frames().length, 16);
   });
 
-  it('top-down profile', () => {
+  it.only('top-down profile', () => {
     const leavesCount = model.topDown().children.size;
+    console.log([...model.topDown().children.values()].map(e => e.event.name))
     assert.equal(leavesCount, 27);
     const time = model.topDown().totalTime.toFixed(2);
     assert.equal(time, '555.01');
@@ -73,7 +74,7 @@ describe('DevTools Timeline Model', function() {
 
   it('bottom-up profile', () => {
     const leavesCount = model.bottomUp().children.size;
-    assert.equal(leavesCount, 242);
+    assert.equal(leavesCount, 220);
     const topCosts = [...model.bottomUpGroupBy('URL').children.values()];
     const time = topCosts[1].totalTime.toFixed(2);
     const url = topCosts[1].id;
