@@ -26,7 +26,7 @@ function dumpScreenshot(filmStripModel) {
 function dumpTree(tree) {
   var result = new Map();
   tree.children.forEach(function(value, key) {
-    result.set(key, value.selfTime.toFixed(2));
+    result.set(key, value.selfTime.toFixed(1));
   });
   return result;
 }
