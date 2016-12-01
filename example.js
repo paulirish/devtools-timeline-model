@@ -1,5 +1,5 @@
 const filenames = [
-  // 'test/assets/mdn-fling.json',
+  'test/assets/mdn-fling.json',
   'test/assets/devtools-homepage-w-screenshots-trace.json'
 ];
 
@@ -23,11 +23,9 @@ function dumpScreenshot(filmStripModel) {
   }
 }
 
-function dumpTree(tree) {
+function dumpTree(tree, timeValue) {
   var result = new Map();
-  tree.children.forEach(function(value, key) {
-    result.set(key, value.selfTime.toFixed(1));
-  });
+  tree.children.forEach((value, key) => result.set(key, value[timeValue].toFixed(1)));
   return result;
 }
 
@@ -46,8 +44,7 @@ function report(filename) {
 
   var topDown = model.topDown();
   console.log('Top down tree total time:\n', topDown.totalTime);
-
-  console.log('Top down tree:\n', dumpTree(topDown));
+  console.log('Top down tree, not grouped:\n', dumpTree(topDown, 'totalTime'));
 
   console.log('Bottom up tree leaves:\n', [...model.bottomUp().children.entries()].length);
   // console.log('Top down tree, grouped by URL:\n', model.topDownGroupedUnsorted)
@@ -72,7 +69,7 @@ function report(filename) {
   // console.log('Bottom up tree grouped by URL:\n', model.bottomUpGroupBy('None'))
 
   var bottomUpByName = model.bottomUpGroupBy('EventName');
-  console.log('Bottom up tree grouped by EventName:\n', dumpTree(bottomUpByName));
+  console.log('Bottom up tree grouped by EventName:\n', dumpTree(bottomUpByName, 'selfTime'));
 
   console.groupEnd(filename);
 }

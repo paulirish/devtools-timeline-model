@@ -40,7 +40,7 @@ describe('Web Inspector obj', function() {
 
 
 describe('DevTools Timeline Model', function() {
-  it.only('doesn\'t throw an exception', () => {
+  it('doesn\'t throw an exception', () => {
     assert.doesNotThrow(_ => {
       model = new TimelineModel(events);
     });
@@ -64,9 +64,9 @@ describe('DevTools Timeline Model', function() {
     assert.equal(model.frameModel().frames().length, 16);
   });
 
-  it.only('top-down profile', () => {
+  it('top-down profile', () => {
     const leavesCount = model.topDown().children.size;
-    console.log([...model.topDown().children.values()].map(e => e.event.name))
+    console.log([...model.topDown().children.values()].map(e => [e.id, e.totalTime]));
     assert.equal(leavesCount, 27);
     const time = model.topDown().totalTime.toFixed(2);
     assert.equal(time, '555.01');
@@ -103,6 +103,12 @@ describe('DevTools Timeline Model', function() {
   });
 });
 
+// ideas for tests
+// bottom up tree returns in self desc order
+// top down tree returns in total desc order
+// no entry in trees with empty ID
+
+
 // https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview#heading=h.q8di1j2nawlp
 describe('Supports Trace Events in JSON Object format', function() {
   const events = fs.readFileSync(traceInObjectFormatFilename, 'utf8');
@@ -120,3 +126,4 @@ describe('Supports Trace Events in JSON Object format', function() {
     assert.equal(model.frameModel().frames().length, 12);
   });
 });
+
