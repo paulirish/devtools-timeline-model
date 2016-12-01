@@ -59,24 +59,27 @@ describe('DevTools Timeline Model', function() {
   });
 
   it('metrics returned are expected', () => {
-    assert.equal(model.timelineModel().mainThreadEvents().length, 7756);
+    assert.equal(model.timelineModel().mainThreadEvents().length, 7721);
     assert.equal(model.interactionModel().interactionRecords().length, 0);
     assert.equal(model.frameModel().frames().length, 16);
   });
 
   it('top-down profile', () => {
     const leavesCount = model.topDown().children.size;
-    assert.equal(leavesCount, 27);
+    // console.log([...model.topDown().children.values()].map(e => [e.id, e.totalTime.toFixed(1)]));
+
+    assert.equal(leavesCount, 18);
     const time = model.topDown().totalTime.toFixed(2);
     assert.equal(time, '555.01');
   });
 
   it('bottom-up profile', () => {
     const leavesCount = model.bottomUp().children.size;
-    assert.equal(leavesCount, 242);
-    const topCosts = [...model.bottomUpGroupBy('URL').children.values()];
-    const time = topCosts[1].totalTime.toFixed(2);
-    const url = topCosts[1].id;
+    assert.equal(leavesCount, 220);
+    var bottomUpURL = model.bottomUpGroupBy('URL');
+    const topCosts = [...bottomUpURL.children.values()];
+    const time = topCosts[0].totalTime.toFixed(2);
+    const url = topCosts[0].id;
     assert.equal(time, '76.26');
     assert.equal(url, 'https://s.ytimg.com/yts/jsbin/www-embed-lightweight-vflu_2b1k/www-embed-lightweight.js');
   });
@@ -95,12 +98,18 @@ describe('DevTools Timeline Model', function() {
   it('bottom-up profile - group by subdomain', () => {
     const bottomUpByName = model.bottomUpGroupBy('Subdomain');
     const topCosts = [...bottomUpByName.children.values()];
-    const time = topCosts[2].selfTime.toFixed(2);
-    const name = topCosts[2].id;
+    const time = topCosts[1].selfTime.toFixed(2);
+    const name = topCosts[1].id;
     assert.equal(time, '44.33');
     assert.equal(name, 'developers.google.com');
   });
 });
+
+// ideas for tests
+// bottom up tree returns in self desc order
+// top down tree returns in total desc order
+// no entry in trees with empty ID
+
 
 // https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview#heading=h.q8di1j2nawlp
 describe('Supports Trace Events in JSON Object format', function() {
@@ -119,3 +128,4 @@ describe('Supports Trace Events in JSON Object format', function() {
     assert.equal(model.frameModel().frames().length, 12);
   });
 });
+

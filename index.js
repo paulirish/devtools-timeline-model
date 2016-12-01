@@ -43,6 +43,10 @@ class ModelAPI {
     return this.sandbox.topDown();
   }
 
+  topDownGroupBy(grouping) {
+    return this.sandbox.topDownGroupBy(grouping);
+  }
+
   bottomUp() {
     return this.sandbox.bottomUp();
   }

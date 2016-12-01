@@ -1,5 +1,5 @@
 const filenames = [
-  'test/assets/mdn-fling.json',
+  // 'test/assets/mdn-fling.json',
   'test/assets/devtools-homepage-w-screenshots-trace.json'
 ];
 
@@ -23,6 +23,12 @@ function dumpScreenshot(filmStripModel) {
   }
 }
 
+function dumpTree(tree, timeValue) {
+  var result = new Map();
+  tree.children.forEach((value, key) => result.set(key, value[timeValue].toFixed(1)));
+  return result;
+}
+
 function report(filename) {
   var events = fs.readFileSync(filename, 'utf8');
 
@@ -36,17 +42,21 @@ function report(filename) {
   console.log('Filmstrip model screenshots:\n', model.filmStripModel().frames().length);
   dumpScreenshot(model.filmStripModel());
 
-  console.log('Top down tree total time:\n', model.topDown().totalTime);
+  var topDown = model.topDown();
+  console.log('Top down tree total time:\n', topDown.totalTime);
+  console.log('Top down tree, not grouped:\n', dumpTree(topDown, 'totalTime'));
+
   console.log('Bottom up tree leaves:\n', [...model.bottomUp().children.entries()].length);
-  // console.log('Top down tree, grouped by URL:\n', model.topDownGroupedUnsorted)
-  var topCosts = [...model.bottomUpGroupBy('URL').children.values()];
-  var secondTopCost = topCosts[1];
+  var bottomUpURL = model.bottomUpGroupBy('URL');
+  var secondTopCost = [...bottomUpURL.children.values()][1];
+  console.log('bottom up tree, grouped by URL', dumpTree(bottomUpURL, 'selfTime'));
   console.log('Bottom up tree, grouped, 2nd top URL:\n', secondTopCost.totalTime.toFixed(2), secondTopCost.id);
 
-  var topCostsByDomain = [...model.bottomUpGroupBy('Subdomain').children.values()];
-  var thirdTopDomainCost = topCostsByDomain[2];
-  console.log('Bottom up tree, grouped, 3rd top subdomain:\n', thirdTopDomainCost.totalTime.toFixed(2), thirdTopDomainCost.id);
+  var bottomUpSubdomain = model.bottomUpGroupBy('Subdomain');
+  console.log('Bottom up tree, grouped by top subdomain:\n', dumpTree(bottomUpSubdomain, 'selfTime'));
 
+  var bottomUpByName = model.bottomUpGroupBy('EventName');
+  console.log('Bottom up tree grouped by EventName:\n', dumpTree(bottomUpByName, 'selfTime'));
 
   // console.log('Tracing model:\n', model.tracingModel())
   // console.log('Timeline model:\n', model.timelineModel())
@@ -56,16 +66,8 @@ function report(filename) {
 
   // console.log('Top down tree:\n', model.topDown())
   // console.log('Bottom up tree:\n', model.bottomUp())
-  // // console.log('Top down tree, grouped by URL:\n', model.topDownGroupedUnsorted)
+  // console.log('Top down tree, grouped by URL:\n', model.topDownGroupedUnsorted)
   // console.log('Bottom up tree grouped by URL:\n', model.bottomUpGroupBy('None'))
-
-  var bottomUpByName = model.bottomUpGroupBy('EventName');
-  var result = new Map();
-  bottomUpByName.children.forEach(function(value, key) {
-    result.set(key, value.selfTime);
-  });
-  console.log('Bottom up tree grouped by EventName:\n', result);
-
   console.groupEnd(filename);
 }
 
