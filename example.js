@@ -1,5 +1,5 @@
 const filenames = [
-  // 'test/assets/mdn-fling.json',
+  'test/assets/mdn-fling.json',
   'test/assets/devtools-homepage-w-screenshots-trace.json'
 ];
 
