@@ -3,6 +3,12 @@ const filenames = [
   'test/assets/devtools-homepage-w-screenshots-trace.json'
 ];
 
+const TimelineModel = {
+  TimelineModel: {
+    RecordType: {JSFrame: 'JSFrame'}
+  }
+};
+
 var fs = require('fs');
 var TraceToTimelineModel = require('.');
 
@@ -24,11 +30,15 @@ function dumpScreenshot(filmStripModel) {
 }
 
 function dumpTree(tree, timeValue) {
+  var maxEntries = 15;
+  var count = 0;
   var result = new Map();
-
   tree.children.forEach((value, key) => {
-      if (key === 'f:Compile@0/scripting') console.log(value);
-      result.set(key, value[timeValue].toFixed(1))
+    if (++count >= maxEntries) {
+      result.set('other items', `${tree.children.size} total items. truncated to 15 here.`)
+      return;
+    }
+    result.set(value.readableName || key, value[timeValue].toFixed(1));
   });
   return result;
 }
@@ -87,6 +97,25 @@ function viewCallStatsReport() {
 
   var scriptingTasks = bottomUpCategory.children.get('scripting');
   console.log('Bottom up tree, grouped by category, viewing scripting items:\n', dumpTree(scriptingTasks, 'selfTime'));
+
+  var result = new Map();
+  scriptingTasks.children.forEach((value, key) => {
+    if (value.event.name === TimelineModel.TimelineModel.RecordType.JSFrame)
+      key = 'JS Execution';
+    else
+      key = value.readableName;
+
+    var totalTime = result.get(key) || 0;
+    totalTime += value.selfTime;
+    result.set(key, totalTime);
+  });
+
+  result.forEach((value, key) => result.set(key, value.toFixed(1)));
+  console.log(result);
+
+    // if (node.event.name ) {
+    //   readableName = 'adsfads'
+    // } else
 
   console.groupEnd(filename);
 }
