@@ -25,7 +25,11 @@ function dumpScreenshot(filmStripModel) {
 
 function dumpTree(tree, timeValue) {
   var result = new Map();
-  tree.children.forEach((value, key) => result.set(key, value[timeValue].toFixed(1)));
+
+  tree.children.forEach((value, key) => {
+      if (key === 'f:Compile@0/scripting') console.log(value);
+      result.set(key, value[timeValue].toFixed(1))
+  });
   return result;
 }
 
@@ -71,4 +75,22 @@ function report(filename) {
   console.groupEnd(filename);
 }
 
-filenames.forEach(report);
+function viewCallStatsReport() {
+  var filename = 'test/assets/ember-webpack-todomvc.json';
+  var events = fs.readFileSync(filename, 'utf8');
+
+  var model = new TraceToTimelineModel(events);
+  console.group(filename);
+
+  var bottomUpCategory = model.bottomUpGroupBy('Category');
+  console.log('Bottom up tree, grouped by category:\n', dumpTree(bottomUpCategory, 'selfTime'));
+
+  var scriptingTasks = bottomUpCategory.children.get('scripting');
+  console.log('Bottom up tree, grouped by category, viewing scripting items:\n', dumpTree(scriptingTasks, 'selfTime'));
+
+  console.groupEnd(filename);
+}
+
+
+// filenames.forEach(report);
+viewCallStatsReport();
