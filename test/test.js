@@ -66,8 +66,9 @@ describe('DevTools Timeline Model', function() {
 
   it('top-down profile', () => {
     const leavesCount = model.topDown().children.size;
-    console.log([...model.topDown().children.values()].map(e => [e.id, e.totalTime]));
-    assert.equal(leavesCount, 27);
+    // console.log([...model.topDown().children.values()].map(e => [e.id, e.totalTime.toFixed(1)]));
+
+    assert.equal(leavesCount, 18);
     const time = model.topDown().totalTime.toFixed(2);
     assert.equal(time, '555.01');
   });
@@ -75,9 +76,10 @@ describe('DevTools Timeline Model', function() {
   it('bottom-up profile', () => {
     const leavesCount = model.bottomUp().children.size;
     assert.equal(leavesCount, 220);
-    const topCosts = [...model.bottomUpGroupBy('URL').children.values()];
-    const time = topCosts[1].totalTime.toFixed(2);
-    const url = topCosts[1].id;
+    var bottomUpURL = model.bottomUpGroupBy('URL');
+    const topCosts = [...bottomUpURL.children.values()];
+    const time = topCosts[0].totalTime.toFixed(2);
+    const url = topCosts[0].id;
     assert.equal(time, '76.26');
     assert.equal(url, 'https://s.ytimg.com/yts/jsbin/www-embed-lightweight-vflu_2b1k/www-embed-lightweight.js');
   });
@@ -96,8 +98,8 @@ describe('DevTools Timeline Model', function() {
   it('bottom-up profile - group by subdomain', () => {
     const bottomUpByName = model.bottomUpGroupBy('Subdomain');
     const topCosts = [...bottomUpByName.children.values()];
-    const time = topCosts[2].selfTime.toFixed(2);
-    const name = topCosts[2].id;
+    const time = topCosts[1].selfTime.toFixed(2);
+    const name = topCosts[1].id;
     assert.equal(time, '44.33');
     assert.equal(name, 'developers.google.com');
   });
