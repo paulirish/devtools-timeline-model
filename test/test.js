@@ -41,9 +41,7 @@ describe('Web Inspector obj', function() {
 
 describe('DevTools Timeline Model', function() {
   it('doesn\'t throw an exception', () => {
-    assert.doesNotThrow(_ => {
-      model = new TimelineModel(events);
-    });
+    model = new TimelineModel(events);
   });
 
   it('Multiple instances don\'t conflict', () => {
