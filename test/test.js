@@ -12,25 +12,11 @@ var model;
 
 /* global describe, it */
 describe('Web Inspector obj', function() {
-  // tested over in lighthouse but this isn't available in the sandbox
-  it.skip('WebInspector exported is the real one', () => {
-    const WebInspector = TimelineModel.sandbox.WI;
-    assert.equal(typeof WebInspector, 'object');
-    assert.ok(WebInspector.TimelineModel);
-    assert.ok(WebInspector.TimelineUIUtils);
-    assert.ok(WebInspector.FilmStripModel);
-    assert.ok(WebInspector.TimelineProfileTree);
-    assert.ok(WebInspector.TimelineAggregator);
-    assert.ok(WebInspector.NetworkManager);
-    assert.ok(WebInspector.Color);
-  });
-
   it('Array native globals dont leak', () => {
     assert.equal(Array.prototype.peekLast, undefined);
   });
 
   it('WebInspector global doesn\'t leak', () => {
-    assert.equal('WebInspector' in global, false);
     assert.equal('Runtime' in global, false);
     assert.equal('TreeElement' in global, false);
     assert.equal('WorkerRuntime' in global, false);
@@ -100,6 +86,21 @@ describe('DevTools Timeline Model', function() {
     const name = topCosts[1].id;
     assert.equal(time, '44.33');
     assert.equal(name, 'developers.google.com');
+  });
+
+  it('frame model', () => {
+    const frameModel = model.frameModel();
+    assert.equal(frameModel.frames().length, 16);
+  });
+
+  it('film strip model', () => {
+    const filmStrip = model.filmStripModel();
+    assert.equal(filmStrip.frames().length, 16);
+  });
+
+  it('interaction model', () => {
+    const interactionModel = model.interactionModel();
+    assert.equal(interactionModel.interactionRecords().length, 0);
   });
 });
 
