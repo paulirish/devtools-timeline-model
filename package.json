@@ -24,7 +24,7 @@
     "timeline"
   ],
   "dependencies": {
-    "chrome-devtools-frontend": "1.0.445684",
+    "chrome-devtools-frontend": "1.0.457951",
     "resolve": "1.1.7"
   },
   "devDependencies": {

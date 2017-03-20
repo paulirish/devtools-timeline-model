@@ -25,7 +25,7 @@ function dumpScreenshot(filmStripModel) {
 
 function dumpTree(tree, timeValue) {
   var result = new Map();
-  tree.children.forEach((value, key) => result.set(key, value[timeValue].toFixed(1)));
+  tree.children().forEach((value, key) => result.set(key, value[timeValue].toFixed(1)));
   return result;
 }
 
@@ -46,9 +46,9 @@ function report(filename) {
   console.log('Top down tree total time:\n', topDown.totalTime);
   console.log('Top down tree, not grouped:\n', dumpTree(topDown, 'totalTime'));
 
-  console.log('Bottom up tree leaves:\n', [...model.bottomUp().children.entries()].length);
+  console.log('Bottom up tree leaves:\n', [...model.bottomUp().children().entries()].length);
   var bottomUpURL = model.bottomUpGroupBy('URL');
-  var secondTopCost = [...bottomUpURL.children.values()][1];
+  var secondTopCost = [...bottomUpURL.children().values()][1];
   console.log('bottom up tree, grouped by URL', dumpTree(bottomUpURL, 'selfTime'));
   console.log('Bottom up tree, grouped, 2nd top URL:\n', secondTopCost.totalTime.toFixed(2), secondTopCost.id);
 
