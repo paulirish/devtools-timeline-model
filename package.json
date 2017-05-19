@@ -8,9 +8,6 @@
     "name": "Paul Irish",
     "url": "github.com/paulirish"
   },
-  "engines": {
-    "node": ">=5.0"
-  },
   "scripts": {
     "test": "npm run unit && npm run lint",
     "unit": "mocha $(find ./test -name '*.js') --timeout 10000",
