@@ -31,6 +31,11 @@ class ModelAPI {
     return this;
   }
 
+
+  networkRequestModel() {
+    return this.sandbox.networkRequestModel();
+  }
+
   timelineModel() {
     return this.sandbox.timelineModel();
   }

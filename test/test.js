@@ -102,6 +102,11 @@ describe('DevTools Timeline Model', function() {
     const interactionModel = model.interactionModel();
     assert.equal(interactionModel.interactionRecords().length, 0);
   });
+
+  it('networkRequest model', () => {
+    const requestNetworkModel = model.networkRequestModel();
+    assert.equal(requestNetworkModel.length, 47);
+  });
 });
 
 // ideas for tests
