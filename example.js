@@ -1,6 +1,8 @@
 const filenames = [
-  'test/assets/mdn-fling.json',
-  'test/assets/devtools-homepage-w-screenshots-trace.json'
+//  'test/assets/mdn-fling.json',
+//  'test/assets/devtools-homepage-w-screenshots-trace.json',
+//  '../Profile-20180101T205422.json',
+  '../timeline-171215_2_5TD.json'
 ];
 
 var fs = require('fs');
