@@ -7,6 +7,8 @@ var TimelineModel = require('../');
 
 const traceInArrayFormatFilename = './test/assets/devtools-homepage-w-screenshots-trace.json';
 const traceInObjectFormatFilename = './test/assets/trace-in-object-format.json';
+const webpagetestTraceFilename = './test/assets/trace-from-webpagetest.json';
+
 var events = fs.readFileSync(traceInArrayFormatFilename, 'utf8');
 var model;
 
@@ -102,7 +104,26 @@ describe('DevTools Timeline Model', function() {
     const interactionModel = model.interactionModel();
     assert.equal(interactionModel.interactionRecords().length, 0);
   });
+
+  it('limits by startTime', () => {
+    const bottomUpByURL = model.bottomUpGroupBy('URL', 316224076.300);
+    const leavesCount = bottomUpByURL.children.size;
+    assert.equal(leavesCount, 14);
+    const topCosts = [...bottomUpByURL.children.values()];
+    const url = topCosts[1].id;
+    assert.equal(url, 'https://www.google-analytics.com/analytics.js');
+  });
+
+  it('limits by endTime', () => {
+    const bottomUpByURL = model.bottomUpGroupBy('URL', 0, 316223621.274);
+    const leavesCount = bottomUpByURL.children.size;
+    assert.equal(leavesCount, 1);
+    const topCosts = [...bottomUpByURL.children.values()];
+    const url = topCosts[0].id;
+    assert.equal(url, 'https://developers.google.com/web/tools/chrome-devtools/?hl=en');
+  });
 });
+
 
 // ideas for tests
 // bottom up tree returns in self desc order
@@ -128,3 +149,21 @@ describe('Supports Trace Events in JSON Object format', function() {
   });
 });
 
+// WebPageTest generated trace
+describe('Strips initial empty object from WebPageTest trace', function() {
+  const events = fs.readFileSync(webpagetestTraceFilename, 'utf8');
+  let model;
+
+  it('does not throw an exception', () => {
+    assert.doesNotThrow(_ => {
+      model = new TimelineModel(events);
+    });
+  });
+
+  it('creates correctly formatted model', () => {
+    assert.equal(model.timelineModel().mainThreadEvents().length, 609);
+    assert.equal(model.interactionModel().interactionRecords().length, 0);
+    assert.equal(model.frameModel().frames().length, 0);
+  });
+
+});
