@@ -1,6 +1,6 @@
 {
   "name": "devtools-timeline-model",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Parse raw trace data into the Chrome DevTools' structured profiling data models",
   "license": "Apache-2.0",
   "repository": "paulirish/devtools-timeline-model",
