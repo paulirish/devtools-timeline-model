@@ -39,24 +39,24 @@ class ModelAPI {
     return this.sandbox.tracingModel();
   }
 
-  topDown() {
-    return this.sandbox.topDown();
+  topDown(startTime = 0, endTime = Infinity) {
+    return this.sandbox.topDown(startTime, endTime);
   }
 
-  topDownGroupBy(grouping) {
-    return this.sandbox.topDownGroupBy(grouping);
+  topDownGroupBy(grouping, startTime = 0, endTime = Infinity) {
+    return this.sandbox.topDownGroupBy(grouping, startTime, endTime);
   }
 
-  bottomUp() {
-    return this.sandbox.bottomUp();
+  bottomUp(startTime = 0, endTime = Infinity) {
+    return this.sandbox.bottomUp(startTime, endTime);
   }
 
   /**
    * @ param  {!String} grouping Allowed values: None Category Subdomain Domain URL Name
    * @ return {!WebInspector.TimelineProfileTree.Node} A grouped and sorted tree
    */
-  bottomUpGroupBy(grouping) {
-    return this.sandbox.bottomUpGroupBy(grouping);
+  bottomUpGroupBy(grouping, startTime = 0, endTime = Infinity) {
+    return this.sandbox.bottomUpGroupBy(grouping, startTime, endTime);
   }
 
   frameModel() {
