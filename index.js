@@ -39,24 +39,28 @@ class ModelAPI {
     return this.sandbox.tracingModel();
   }
 
-  topDown(startTime = 0, endTime = Infinity) {
-    return this.sandbox.topDown(startTime, endTime);
+  topDown(opts = {}) {
+    const defaults = {startTime: 0, endTime: Infinity};
+    return this.sandbox.topDown({...defaults, ...opts});
   }
 
-  topDownGroupBy(grouping, startTime = 0, endTime = Infinity) {
-    return this.sandbox.topDownGroupBy(grouping, startTime, endTime);
+  topDownGroupBy(grouping, opts = {}) {
+    const defaults = {startTime: 0, endTime: Infinity, allEvents: false};
+    return this.sandbox.topDownGroupBy(grouping, {...defaults, ...opts});
   }
 
-  bottomUp(startTime = 0, endTime = Infinity) {
-    return this.sandbox.bottomUp(startTime, endTime);
+  bottomUp(opts = {}) {
+    const defaults = {startTime: 0, endTime: Infinity};
+    return this.sandbox.bottomUp({...defaults, ...opts});
   }
 
   /**
    * @ param  {!String} grouping Allowed values: None Category Subdomain Domain URL Name
    * @ return {!WebInspector.TimelineProfileTree.Node} A grouped and sorted tree
    */
-  bottomUpGroupBy(grouping, startTime = 0, endTime = Infinity) {
-    return this.sandbox.bottomUpGroupBy(grouping, startTime, endTime);
+  bottomUpGroupBy(grouping, opts = {}) {
+    const defaults = {allEvents: false, startTime: 0, endTime: Infinity};
+    return this.sandbox.bottomUpGroupBy(grouping, {...defaults, ...opts});
   }
 
   frameModel() {

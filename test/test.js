@@ -12,7 +12,7 @@ const webpagetestTraceFilename = './test/assets/trace-from-webpagetest.json';
 var events = fs.readFileSync(traceInArrayFormatFilename, 'utf8');
 var model;
 
-/* global describe, it */
+/* eslint-env mocha */
 describe('Web Inspector obj', function() {
   it('Array native globals dont leak', () => {
     assert.equal(Array.prototype.peekLast, undefined);
@@ -28,7 +28,7 @@ describe('Web Inspector obj', function() {
 
 
 describe('DevTools Timeline Model', function() {
-  it('doesn\'t throw an exception', () => {
+  before(() => {
     model = new TimelineModel(events);
   });
 
@@ -90,6 +90,15 @@ describe('DevTools Timeline Model', function() {
     assert.equal(name, 'developers.google.com');
   });
 
+  it('bottom-up profile - all events', () => {
+    const bottomUpByName = model.bottomUpGroupBy('Category', {allEvents: true});
+    const topCosts = [...bottomUpByName.children.values()];
+    const otherGroup = topCosts.find(g => g.id === 'other');
+    assert.ok(otherGroup, 'Other group is reported');
+    const time = otherGroup.selfTime.toFixed(2);
+    assert.equal(time, '137.62');
+  });
+
   it('frame model', () => {
     const frameModel = model.frameModel();
     assert.equal(frameModel.frames().length, 16);
@@ -106,7 +115,7 @@ describe('DevTools Timeline Model', function() {
   });
 
   it('limits by startTime', () => {
-    const bottomUpByURL = model.bottomUpGroupBy('URL', 316224076.300);
+    const bottomUpByURL = model.bottomUpGroupBy('URL', {startTime: 316224076.300});
     const leavesCount = bottomUpByURL.children.size;
     assert.equal(leavesCount, 14);
     const topCosts = [...bottomUpByURL.children.values()];
@@ -115,7 +124,7 @@ describe('DevTools Timeline Model', function() {
   });
 
   it('limits by endTime', () => {
-    const bottomUpByURL = model.bottomUpGroupBy('URL', 0, 316223621.274);
+    const bottomUpByURL = model.bottomUpGroupBy('URL', {startTime: 0, endTime: 316223621.274});
     const leavesCount = bottomUpByURL.children.size;
     assert.equal(leavesCount, 1);
     const topCosts = [...bottomUpByURL.children.values()];

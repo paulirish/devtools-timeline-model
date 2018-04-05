@@ -58,6 +58,9 @@ function report(filename) {
   var bottomUpByName = model.bottomUpGroupBy('EventName');
   console.log('Bottom up tree grouped by EventName:\n', dumpTree(bottomUpByName, 'selfTime'));
 
+  var bottomUpCategoryAll = model.bottomUpGroupBy('Category', {allEvents: true});
+  console.log('Bottom up tree, all events, grouped by Category:\n', dumpTree(bottomUpCategoryAll, 'selfTime'));
+
   // console.log('Tracing model:\n', model.tracingModel())
   // console.log('Timeline model:\n', model.timelineModel())
   // console.log('IR model:\n', model.interactionModel())
