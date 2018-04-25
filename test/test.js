@@ -9,10 +9,7 @@ const traceInArrayFormatFilename = './test/assets/devtools-homepage-w-screenshot
 const traceInObjectFormatFilename = './test/assets/trace-in-object-format.json';
 const webpagetestTraceFilename = './test/assets/trace-from-webpagetest.json';
 
-var events = fs.readFileSync(traceInArrayFormatFilename, 'utf8');
-var model;
-
-/* global describe, it */
+/* eslint-env mocha */
 describe('Web Inspector obj', function() {
   it('Array native globals dont leak', () => {
     assert.equal(Array.prototype.peekLast, undefined);
@@ -28,7 +25,10 @@ describe('Web Inspector obj', function() {
 
 
 describe('DevTools Timeline Model', function() {
-  it('doesn\'t throw an exception', () => {
+  let model = null;
+  const events = fs.readFileSync(traceInArrayFormatFilename, 'utf8');
+
+  before('doesn\'t throw an exception', () => {
     model = new TimelineModel(events);
   });
 
@@ -51,8 +51,8 @@ describe('DevTools Timeline Model', function() {
   });
 
   it('top-down profile', () => {
-    const leavesCount = model.topDown().children.size;
-    // console.log([...model.topDown().children.values()].map(e => [e.id, e.totalTime.toFixed(1)]));
+    const leavesCount = model.topDown().children().size;
+    // console.log([...model.topDown().children().values()].map(e => [e.id, e.totalTime.toFixed(1)]));
 
     assert.equal(leavesCount, 18);
     const time = model.topDown().totalTime.toFixed(2);
@@ -60,10 +60,10 @@ describe('DevTools Timeline Model', function() {
   });
 
   it('bottom-up profile', () => {
-    const leavesCount = model.bottomUp().children.size;
+    const leavesCount = model.bottomUp().children().size;
     assert.equal(leavesCount, 220);
     var bottomUpURL = model.bottomUpGroupBy('URL');
-    const topCosts = [...bottomUpURL.children.values()];
+    const topCosts = [...bottomUpURL.children().values()];
     const time = topCosts[0].totalTime.toFixed(2);
     const url = topCosts[0].id;
     assert.equal(time, '76.26');
@@ -72,9 +72,9 @@ describe('DevTools Timeline Model', function() {
 
   it('bottom-up profile - group by eventname', () => {
     const bottomUpByName = model.bottomUpGroupBy('EventName');
-    const leavesCount = bottomUpByName.children.size;
+    const leavesCount = bottomUpByName.children().size;
     assert.equal(leavesCount, 13);
-    const topCosts = [...bottomUpByName.children.values()];
+    const topCosts = [...bottomUpByName.children().values()];
     const time = topCosts[0].selfTime.toFixed(2);
     const name = topCosts[0].id;
     assert.equal(time, '187.75');
@@ -83,7 +83,7 @@ describe('DevTools Timeline Model', function() {
 
   it('bottom-up profile - group by subdomain', () => {
     const bottomUpByName = model.bottomUpGroupBy('Subdomain');
-    const topCosts = [...bottomUpByName.children.values()];
+    const topCosts = [...bottomUpByName.children().values()];
     const time = topCosts[1].selfTime.toFixed(2);
     const name = topCosts[1].id;
     assert.equal(time, '44.33');
@@ -107,18 +107,18 @@ describe('DevTools Timeline Model', function() {
 
   it('limits by startTime', () => {
     const bottomUpByURL = model.bottomUpGroupBy('URL', 316224076.300);
-    const leavesCount = bottomUpByURL.children.size;
+    const leavesCount = bottomUpByURL.children().size;
     assert.equal(leavesCount, 14);
-    const topCosts = [...bottomUpByURL.children.values()];
+    const topCosts = [...bottomUpByURL.children().values()];
     const url = topCosts[1].id;
     assert.equal(url, 'https://www.google-analytics.com/analytics.js');
   });
 
   it('limits by endTime', () => {
     const bottomUpByURL = model.bottomUpGroupBy('URL', 0, 316223621.274);
-    const leavesCount = bottomUpByURL.children.size;
+    const leavesCount = bottomUpByURL.children().size;
     assert.equal(leavesCount, 1);
-    const topCosts = [...bottomUpByURL.children.values()];
+    const topCosts = [...bottomUpByURL.children().values()];
     const url = topCosts[0].id;
     assert.equal(url, 'https://developers.google.com/web/tools/chrome-devtools/?hl=en');
   });
