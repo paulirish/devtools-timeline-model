@@ -39,6 +39,10 @@ class ModelAPI {
     return this.sandbox.tracingModel();
   }
 
+  performanceModel() {
+    return this.sandbox.performanceModel();
+  }
+
   topDown(startTime = 0, endTime = Infinity) {
     return this.sandbox.topDown(startTime, endTime);
   }
@@ -74,3 +78,4 @@ class ModelAPI {
 }
 
 module.exports = ModelAPI;
+

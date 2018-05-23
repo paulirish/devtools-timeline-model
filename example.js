@@ -36,7 +36,7 @@ function report(filename) {
 
   console.group(filename);
 
-  console.log('Timeline model events:\n', model.timelineModel().mainThreadEvents().length);
+  console.log('Timeline model events:\n', model.timelineModel().tracks().filter(e => e.forMainFrame)[0].events.length);
   console.log('IR model interactions\n', model.interactionModel().interactionRecords().length);
   console.log('Frame model frames:\n', model.frameModel().frames().length);
   console.log('Filmstrip model screenshots:\n', model.filmStripModel().frames().length);
