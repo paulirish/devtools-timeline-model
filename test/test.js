@@ -39,13 +39,13 @@ describe('DevTools Timeline Model', function() {
       model1 = new TimelineModel(events);
       model2 = new TimelineModel(events);
     });
-    const events1 = model1.timelineModel().mainThreadEvents().length;
-    const events2 = model2.timelineModel().mainThreadEvents().length;
+    const events1 = model1.timelineModel().tracks().filter(e => e.forMainFrame)[0].events.length;
+    const events2 = model2.timelineModel().tracks().filter(e => e.forMainFrame)[0].events.length;
     assert.equal(events1, events2);
   });
 
   it('metrics returned are expected', () => {
-    assert.equal(model.timelineModel().mainThreadEvents().length, 7721);
+    assert.equal(model.timelineModel().tracks().filter(e => e.forMainFrame)[0].events.length, 7721);
     assert.equal(model.interactionModel().interactionRecords().length, 0);
     assert.equal(model.frameModel().frames().length, 16);
   });
@@ -143,7 +143,7 @@ describe('Supports Trace Events in JSON Object format', function() {
   });
 
   it('creates correctly formatted model', () => {
-    assert.equal(model.timelineModel().mainThreadEvents().length, 8254);
+    assert.equal(model.timelineModel().tracks().filter(e => e.forMainFrame)[0].events.length, 8254);
     assert.equal(model.interactionModel().interactionRecords().length, 0);
     assert.equal(model.frameModel().frames().length, 12);
   });
@@ -161,7 +161,7 @@ describe('Strips initial empty object from WebPageTest trace', function() {
   });
 
   it('creates correctly formatted model', () => {
-    assert.equal(model.timelineModel().mainThreadEvents().length, 609);
+    assert.equal(model.timelineModel().tracks().filter(e => e.forMainFrame)[0].events.length, 609);
     assert.equal(model.interactionModel().interactionRecords().length, 0);
     assert.equal(model.frameModel().frames().length, 0);
   });
