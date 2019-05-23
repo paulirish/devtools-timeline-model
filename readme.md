@@ -1,6 +1,15 @@
 # devtools-timeline-model [![Build Status](https://travis-ci.org/paulirish/devtools-timeline-model.svg?branch=master)](https://travis-ci.org/paulirish/devtools-timeline-model)
 
 
+**Unsupported**. 
+
+Now we recommend you use https://github.com/aslushnikov/tracium which will soon be upstreamed into the [Lighthouse](https://github.com/GoogleChrome/lighthouse/) repo.
+
+Cheers
+
+
+---------------------
+
 > Parse raw trace data into the Chrome DevTools' structured profiling data models
 
 If you use something like [big-rig](https://github.com/googlechrome/big-rig) or [automated-chrome-profiling](https://github.com/paulirish/automated-chrome-profiling#timeline-recording) you may end up with raw trace data. It's pretty raw. This module will parse that stuff into something a bit more consumable, and should help you with higher level analysis.
