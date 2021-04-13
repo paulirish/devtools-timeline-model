@@ -3,7 +3,7 @@
 
 **Unsupported**. 
 
-Now we recommend you use https://github.com/aslushnikov/tracium which will soon be upstreamed into the [Lighthouse](https://github.com/GoogleChrome/lighthouse/) repo.
+Now we recommend you use another library for parsing traces.. See https://github.com/jlfwong/speedscope/blob/main/src/import/chrome.ts and https://github.com/saucelabs/tracelib and https://github.com/GoogleChrome/lighthouse/tree/master/lighthouse-core/lib/tracehouse
 
 Cheers
 
