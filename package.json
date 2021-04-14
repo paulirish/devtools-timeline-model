@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "npm run unit && npm run lint",
-    "unit": "mocha $(find ./test -name '*.js') --timeout 10000",
+    "unit": "mocha 'test/*.js' --timeout 10000",
     "lint": "eslint .",
     "watch": "find . -name \"*.js\"  | grep -v \"node_modules\" | grep -v \"test\" | entr npm run test",
     "watchlint": "find . -name \"*.js\"  | grep -v \"node_modules\" | grep -v \"test\" | entr npm run lint"
@@ -24,7 +24,7 @@
     "timeline"
   ],
   "dependencies": {
-    "chrome-devtools-frontend": "1.0.445684",
+    "chrome-devtools-frontend": "1.0.560287",
     "resolve": "1.1.7"
   },
   "devDependencies": {
